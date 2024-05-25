@@ -15,6 +15,7 @@ if(isset($_POST['username']) && isset($_POST['password'])) {
     // Check if the provided credentials are for admin
     if($username === 'admin' && $password === 'admin') {
         // Set session variables for admin
+        $_SESSION['user_id'] = 1;
         $_SESSION['username'] = $username;
         $_SESSION['role'] = 'admin';
         $_SESSION['full_name'] = 'admin';
