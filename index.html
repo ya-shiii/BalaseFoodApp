@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Balase Food App</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="bg-image flex-column justify-content-center pt-5">
+        <div class="container text-center">
+            <h1 class="display-4 text-bold">Balase Food App</h1>
+        </div>
+        <div class="container col-lg-4 col-md-6 col-sm-8">
+            <div class="card p-4 bg-dark text-white">
+                <h1 class="mb-4 fw-bolder text-center">Sign in</h1>
+                <form id="login-form" action="php/login.php" method="POST">
+                    <div class="form-group">
+                        <label for="username">Username:</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <p>Don't have an account? <a href="register.html">Register Now</a></p>
+                    <button type="submit" class="btn btn-primary btn-block">Login</button>
+                </form>
+                <div id="response"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        &copy; Balase Food App
+    </footer>
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

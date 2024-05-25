@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Balase Food App - Admin</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container bg-image flex-column justify-content-center py-5 mb-5">
+        <div class="container text-center">
+            <h1 class="display-4 text-bold">Chef List</h1>
+            <div class="justify-content-center align-items-center mb-5">
+                <a href="admin.html" class="btn btn-primary mr-2">Return</a>
+                <a href="#" class="btn btn-success mr-2" id="add-link" data-toggle="modal" data-target="#addChefModal">Add Chef &plus;</a>
+                <a href="php/logout.php" class="btn btn-danger h-full">Logout</a>
+            </div>
+
+        </div>
+
+        <!-- Card-like div for customer details -->
+        <div class="container">
+            <div class="row mt-5">
+                <!-- customer cards will be populated here -->
+            </div>
+        </div>
+
+        <!-- Modal for adding a Chef -->
+        <div class="modal fade bg-light" id="addChefModal" tabindex="-1" role="dialog" aria-labelledby="addChefModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog bg-dark text-white" role="document">
+                <div class="modal-content bg-dark text-white">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-bold" id="addChefModalLabel">Add New Chef</h5>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body bg-dark text-white">
+                        <!-- Form to add a Chef -->
+                        <form id="addChefForm" method="post" action="php/add_Chef.php">
+                            <!-- Form fields for Chef details -->
+                            <div class="form-group">
+                                <label for="ChefName">Chef Name</label>
+                                <input type="text" class="form-control" id="ChefName" name="full_name" required
+                                    placeholder="Enter Chef name">
+                            </div>
+                            <div class="form-group">
+                                <label for="ChefUsername">Username</label>
+                                <input type="text" class="form-control" id="ChefUsername" name="u_name" required
+                                    placeholder="Enter username">
+                            </div>
+                            <div class="form-group">
+                                <label for="ChefPassword">Password</label>
+                                <input type="password" class="form-control" id="ChefPassword" name="password" required
+                                    placeholder="Enter password">
+                            </div>
+                            <div class="form-group">
+                                <label for="ChefEmail">Email</label>
+                                <input type="email" class="form-control" id="ChefEmail" name="email" required
+                                    placeholder="Enter email">
+                            </div>
+                            <div class="form-group">
+                                <label for="ChefPhone">Phone</label>
+                                <input type="text" class="form-control" id="ChefPhone" name="phone" required
+                                    placeholder="Enter phone number">
+                            </div>
+                            <div class="form-group">
+                                <label for="ChefAddress">Address</label>
+                                <input type="text" class="form-control" id="ChefAddress" name="address" required
+                                    placeholder="Enter address">
+                            </div>
+                            <!-- Add more fields as needed -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary" id="addChefBtn">Add Chef</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal for editing a Chef -->
+        <div class="modal fade" id="editChefModal" tabindex="-1" role="dialog" aria-labelledby="editChefModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editChefModalLabel">Edit Chef Information</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Form to edit a Chef -->
+                        <form id="editChefForm" method="post" action="php/edit_chef.php">
+                            <!-- Form fields for Chef details -->
+                            <div class="form-group" hidden>
+                                <label for="user_id">Chef Name</label>
+                                <input type="text" class="form-control" id="user_id" name="user_id" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="editChefName">Chef Name</label>
+                                <input type="text" class="form-control" id="editChefName" name="full_name" required
+                                    placeholder="Enter Chef name">
+                            </div>
+                            <div class="form-group">
+                                <label for="editChefUsername">Username</label>
+                                <input type="text" class="form-control" id="editChefUsername" name="username" required
+                                    placeholder="Enter username">
+                            </div>
+                            <div class="form-group">
+                                <label for="editChefPassword">Password</label>
+                                <input type="password" class="form-control" id="editChefPassword" name="password"
+                                    required placeholder="Enter password">
+                            </div>
+                            <div class="form-group">
+                                <label for="editChefEmail">Email</label>
+                                <input type="email" class="form-control" id="editChefEmail" name="email" required
+                                    placeholder="Enter email">
+                            </div>
+                            <div class="form-group">
+                                <label for="editChefPhone">Phone</label>
+                                <input type="text" class="form-control" id="editChefPhone" name="phone" required
+                                    placeholder="Enter phone number">
+                            </div>
+                            <div class="form-group">
+                                <label for="editChefAddress">Address</label>
+                                <input type="text" class="form-control" id="editChefAddress" name="address" required
+                                    placeholder="Enter address">
+                            </div>
+                            <!-- Buttons Section -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary" id="editChefBtn">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        &copy; Balase Food App
+    </footer>
+
+    <!-- Bootstrap JS and jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script src="js/admin-chefs.js"></script>
+</body>
+
+</html>
