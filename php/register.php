@@ -1,68 +1,72 @@
 <?php
-
-// Include your database connection file
 include 'db_connect.php';
+header('Content-Type: application/json');
 
-// Check if form fields are set and not empty
-if (
-    isset($_POST['u_name']) && !empty($_POST['u_name']) &&
-    isset($_POST['password']) && !empty($_POST['password']) &&
-    isset($_POST['full_name']) && !empty($_POST['full_name']) &&
-    isset($_POST['email']) && !empty($_POST['email']) &&
-    isset($_POST['phone']) && !empty($_POST['phone']) &&
-    isset($_POST['address']) && !empty($_POST['address'])
-) {
-    // Sanitize inputs to prevent SQL injection
-    $u_name = mysqli_real_escape_string($conn, $_POST['u_name']);
-    $password = mysqli_real_escape_string($conn, $_POST['password']);
-    $full_name = mysqli_real_escape_string($conn, $_POST['full_name']);
-    $email = mysqli_real_escape_string($conn, $_POST['email']);
-    $phone = mysqli_real_escape_string($conn, $_POST['phone']);
-    $address = mysqli_real_escape_string($conn, $_POST['address']);
+if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+    // Get the JSON input data
+    $data = json_decode(file_get_contents('php://input'), true);
 
-    // Check if username is "admin"
-    if ($u_name === 'admin') {
-        echo '<script>alert("Username \"admin\" is not allowed.");</script>';
-    } else {
-        // Check for duplicate username in customers table
-        $check_username_query = "SELECT * FROM customers WHERE username = '$u_name'";
-        $check_username_result = mysqli_query($conn, $check_username_query);
-        if (mysqli_num_rows($check_username_result) > 0) {
-            // Username already exists in customers table
-            echo '<script>alert("Username already exists.");</script>';
-        } else {
-            // Check for duplicate username in in_charge table
-            $check_incharge_query = "SELECT * FROM in_charge WHERE username = '$u_name'";
-            $check_incharge_result = mysqli_query($conn, $check_incharge_query);
-            if (mysqli_num_rows($check_incharge_result) > 0) {
-                // Username already exists in in_charge table
-                echo '<script>alert("Username already exists.");</script>';
+    if (json_last_error() === JSON_ERROR_NONE) {
+        // Check if all required fields are set and not empty
+        if (
+            isset($data['u_name']) && !empty($data['u_name']) &&
+            isset($data['password']) && !empty($data['password']) &&
+            isset($data['full_name']) && !empty($data['full_name']) &&
+            isset($data['email']) && !empty($data['email']) &&
+            isset($data['phone']) && !empty($data['phone']) &&
+            isset($data['address']) && !empty($data['address'])
+        ) {
+            // Sanitize inputs to prevent SQL injection
+            $u_name = mysqli_real_escape_string($conn, $data['u_name']);
+            $password = mysqli_real_escape_string($conn, $data['password']);
+            $full_name = mysqli_real_escape_string($conn, $data['full_name']);
+            $email = mysqli_real_escape_string($conn, $data['email']);
+            $phone = mysqli_real_escape_string($conn, $data['phone']);
+            $address = mysqli_real_escape_string($conn, $data['address']);
+
+            // Check if username is "admin"
+            if ($u_name === 'admin') {
+                echo json_encode(array("success" => false, "error" => 'Username "admin" is not allowed.'));
             } else {
-                // Construct the INSERT query
-                $insert_query = "INSERT INTO customers (username, password, full_name, email, phone, address) VALUES ('$u_name', '$password', '$full_name', '$email', '$phone', '$address')";
-
-                // Execute the query
-                if (mysqli_query($conn, $insert_query)) {
-                    // Query executed successfully
-                    echo '<script>alert("Registration successful.");</script>';
-                    
-                    echo "<script>window.location.href='../index.html'</script>";
+                // Check for duplicate username in customers table
+                $check_username_query = "SELECT * FROM customers WHERE username = '$u_name'";
+                $check_username_result = mysqli_query($conn, $check_username_query);
+                if (mysqli_num_rows($check_username_result) > 0) {
+                    // Username already exists in customers table
+                    echo json_encode(array("success" => false, "error" => 'Username already exists.'));
                 } else {
-                    // Error executing the query
-                    echo '<script>alert("Error: ' . mysqli_error($conn) . '");</script>';
+                    // Check for duplicate username in in_charge table
+                    $check_incharge_query = "SELECT * FROM in_charge WHERE username = '$u_name'";
+                    $check_incharge_result = mysqli_query($conn, $check_incharge_query);
+                    if (mysqli_num_rows($check_incharge_result) > 0) {
+                        // Username already exists in in_charge table
+                        echo json_encode(array("success" => false, "error" => 'Username already exists.'));
+                    } else {
+                        // Construct the INSERT query
+                        $insert_query = "INSERT INTO customers (username, password, full_name, email, phone, address) VALUES ('$u_name', '$password', '$full_name', '$email', '$phone', '$address')";
+
+                        // Execute the query
+                        if (mysqli_query($conn, $insert_query)) {
+                            // Query executed successfully
+                            echo json_encode(array("success" => true, "message" => 'Registration successful.'));
+                        } else {
+                            // Error executing the query
+                            echo json_encode(array("success" => false, "error" => 'Error: ' . mysqli_error($conn)));
+                        }
+                    }
                 }
             }
+        } else {
+            // Required fields not provided
+            echo json_encode(array("success" => false, "error" => 'All fields are required.'));
         }
+    } else {
+        echo json_encode(array("success" => false, "error" => 'Invalid JSON data.'));
     }
 } else {
-    // Required fields not provided
-    echo '<script>alert("All fields are required.");</script>';
+    echo json_encode(array("success" => false, "error" => 'Invalid request method.'));
 }
 
 // Close the database connection
 mysqli_close($conn);
-
-// Redirect to admin dashboard
-echo "<script>window.history.back()</script>";
-exit();
 ?>

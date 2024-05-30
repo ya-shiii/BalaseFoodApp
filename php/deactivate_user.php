@@ -1,35 +1,50 @@
 <?php
-
-// Include the database connection
+// Include your database connection file
 include 'db_connect.php';
 
-// Check if u_id is set in the POST data
-if(isset($_POST['user_id'])) {
-    // Sanitize the u_id to prevent SQL injection
-    $user_id = $conn->real_escape_string($_POST['user_id']);
+// Initialize response array
+$response = array();
 
-    // Update the user status to "inactive" in the user_list table
-    $update_query = "DELETE FROM customers WHERE user_id = '$user_id'";
+// Check if the request method is DELETE
+if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    // Get the JSON input data
+    $data = json_decode(file_get_contents('php://input'), true);
 
-    if ($conn->query($update_query) === TRUE) {
-        // Deactivation successful
-        $response['success'] = true;
-        $response['message'] = "User deleted successfully";
+    // Check if user_id is set and not empty
+    if (isset($data['user_id']) && !empty($data['user_id'])) {
+        // Sanitize the input to prevent SQL injection
+        $user_id = mysqli_real_escape_string($conn, $data['user_id']);
+
+        // Construct the UPDATE query to deactivate the user
+        $update_query = "UPDATE users SET active = 0 WHERE user_id = '$user_id'";
+
+        // Execute the query
+        if (mysqli_query($conn, $update_query)) {
+            // Query executed successfully
+            $response['success'] = true;
+            $response['message'] = 'User deactivated successfully.';
+        } else {
+            // Error executing the query
+            $response['success'] = false;
+            $response['message'] = 'Error: ' . mysqli_error($conn);
+        }
     } else {
-        // Deactivation failed
+        // user_id parameter not set or empty
         $response['success'] = false;
-        $response['message'] = "Error deleting user: " . $conn->error;
+        $response['message'] = 'Invalid request.';
     }
 } else {
-    // u_id not provided in the POST data
     $response['success'] = false;
-    $response['message'] = "User ID not provided";
+    $response['message'] = 'Invalid request method.';
 }
 
 // Close the database connection
-$conn->close();
+mysqli_close($conn);
+
+// Set the content type to JSON
+header('Content-Type: application/json');
 
 // Encode response array into JSON and echo
 echo json_encode($response);
-
+exit();
 ?>

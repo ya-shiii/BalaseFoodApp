@@ -16,7 +16,7 @@ $orders = array();
 $query = "SELECT order_id, customer_id, ordered, status, GROUP_CONCAT(item_name SEPARATOR ', ') AS item_names, SUM(total) AS total FROM order_list WHERE customer_id = '{$_SESSION['user_id']}'";
 
 // Group the rows based on the conditions
-$query .= " GROUP BY ordered";
+$query .= " GROUP BY ordered ORDER BY ordered DESC";
 
 $result = $conn->query($query);
 

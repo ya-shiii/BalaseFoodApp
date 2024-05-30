@@ -1,37 +1,42 @@
 <?php
-// Include the database connection
 include 'db_connect.php';
 session_start();
 
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 // Check if customer_id is set in session
 if (!isset($_SESSION['user_id'])) {
-    echo '<script>alert("Customer not logged in.");</script>';
-    echo '<script>window.location.href = "' . $_SERVER['HTTP_REFERER'] . '";</script>';
+    echo json_encode(array("success" => false, "error" => "Customer not logged in"));
     exit();
 }
 
 // Get the user ID from session
 $customer_id = $_SESSION['user_id'];
 
-// Update the order_list table
-$query = "UPDATE order_list 
-          SET status = 'Pending', ordered = NOW() 
-          WHERE customer_id = $customer_id AND status = 'Cart'";
+// Check if the request method is PUT
+if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
+    // Update the order_list table
+    $query = "UPDATE order_list 
+              SET status = 'Pending', ordered = NOW() 
+              WHERE customer_id = $customer_id AND status = 'Cart'";
 
-if ($result = $conn->query($query)) {
-    if ($conn->affected_rows > 0) {
-        // Successfully updated
-        echo '<script>alert("Order checked out successfully!");</script>';
-        echo '<script>window.location.href = "' . $_SERVER['HTTP_REFERER'] . '";</script>';
+    if ($result = $conn->query($query)) {
+        if ($conn->affected_rows > 0) {
+            // Successfully updated
+            echo json_encode(array("success" => true, "message" => "Order checked out successfully!"));
+        } else {
+            // No rows updated, possibly no items in cart
+            echo json_encode(array("success" => false, "error" => "No items in cart to check out"));
+        }
     } else {
-        // No rows updated, possibly no items in cart
-        echo '<script>alert("No items in cart to check out.");</script>';
-        echo '<script>window.location.href = "' . $_SERVER['HTTP_REFERER'] . '";</script>';
-        
+        // Query execution failed
+        echo json_encode(array("success" => false, "error" => "Error: " . $conn->error));
     }
 } else {
-    // Query execution failed
-    echo "Error: " . $conn->error;
+    // Invalid request method
+    echo json_encode(array("success" => false, "error" => "Invalid request method"));
 }
 
 // Close the database connection

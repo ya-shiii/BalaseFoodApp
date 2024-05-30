@@ -36,7 +36,7 @@ $(document).ready(function () {
                     // Loop through each item and populate cards
                     data.forEach(function (item) {
                         var card = `
-                            <div class="col-lg-4 col-md-6 col-sm-10 my-2">
+                            <div class="col-lg-4 col-md-6 col-sm-10 my-2" data-name="${item.name}">
                                 <a href="#" class="card h-100 bg-dark text-white w-auto" onclick="orderItem(${item.item_id})">
                                     <div class="card-body">
                                         <div class="mb-4 col-12" style="height: 200px; overflow:hidden">
@@ -45,7 +45,7 @@ $(document).ready(function () {
                                         
                                         <h5 class="card-text text-bold">${item.name}</h5>
                                         <p class="card-text">${item.description}</p>
-                                        <p class="card-text">Price: ${item.price}</p>
+                                        <p class="card-text">Price: Php ${item.price}</p>
                                         <p class="font-italic text-success">${item.category}</p>
                                         Order Now!
                                     </div>
@@ -106,3 +106,30 @@ function orderItem(itemId) {
 }
 
 
+function validatePositiveInteger(input) {
+    const value = parseInt(input.value, 10);
+    
+    if (isNaN(value) || value < 1) {
+        input.value = '';
+    } else {
+        input.value = value;
+    }
+}
+
+function preventInvalidKeys(e) {
+    if (e.key === '-' || e.key === '.' || e.key === 'e') {
+        e.preventDefault();
+    }
+}
+
+const itemAmount = document.getElementById('orderItemAmount');
+
+[itemAmount].forEach(input => {
+    input.addEventListener('input', function(e) {
+        validatePositiveInteger(e.target);
+    });
+
+    input.addEventListener('keydown', function(e) {
+        preventInvalidKeys(e);
+    });
+});

@@ -16,6 +16,7 @@ function isDuplicateItem($conn, $itemName) {
 
 // Check if form is submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Extract form data
     $itemName = $conn->real_escape_string($_POST['item_name']);
     $description = $conn->real_escape_string($_POST['description']);
     $price = $conn->real_escape_string($_POST['price']);
@@ -24,8 +25,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Check for duplicate item name
     if (isDuplicateItem($conn, $itemName)) {
-        echo '<script>alert("Item with the same name already exists.");</script>';
-        echo '<script>window.location.href = "' . $_SERVER['HTTP_REFERER'] . '";</script>';
+        $response = array(
+            'success' => false,
+            'message' => 'Item with the same name already exists.'
+        );
+        header('Content-Type: application/json');
+        echo json_encode($response);
         exit();
     }
 
@@ -37,8 +42,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $destination = '../img/menu/' . $filename;
 
         if (!move_uploaded_file($fileTmpPath, $destination)) {
-            echo '<script>alert("Error uploading file.");</script>';
-            echo '<script>window.location.href = "' . $_SERVER['HTTP_REFERER'] . '";</script>';
+            $response = array(
+                'success' => false,
+                'message' => 'Error uploading file.'
+            );
+            header('Content-Type: application/json');
+            echo json_encode($response);
             exit();
         }
     }
@@ -46,16 +55,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Insert into database
     $insert_query = "INSERT INTO menu_list (name, description, price, category) VALUES ('$itemName', '$description', '$price', '$category')";
     if ($conn->query($insert_query) === TRUE) {
-        echo '<script>alert("New item added successfully.");</script>';
-        echo '<script>window.location.href = "' . $_SERVER['HTTP_REFERER'] . '";</script>';
+        $response = array(
+            'success' => true,
+            'message' => 'New item added successfully.'
+        );
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        exit();
     } else {
-        echo '<script>alert("Error adding new item: ' . $conn->error . '");</script>';
-        echo '<script>window.location.href = "' . $_SERVER['HTTP_REFERER'] . '";</script>';
+        $response = array(
+            'success' => false,
+            'message' => 'Error adding new item: ' . $conn->error
+        );
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        exit();
     }
 
     $conn->close();
 } else {
-    echo '<script>alert("Invalid request method.");</script>';
-    echo '<script>window.location.href = "' . $_SERVER['HTTP_REFERER'] . '";</script>';
+    $response = array(
+        'success' => false,
+        'message' => 'Invalid request method.'
+    );
+    header('Content-Type: application/json');
+    echo json_encode($response);
+    exit();
 }
 ?>

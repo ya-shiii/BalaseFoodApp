@@ -43,6 +43,7 @@ $(document).ready(function () {
                                         <p class="card-text">Email: ${user.email}</p>
                                         <p class="card-text">Phone number: ${user.phone}</p>
                                         <a href="#" class="btn btn-primary w-auto" onclick="fetchChefInfo(${user.u_id})">Edit</a>
+                                        <a href="#" class="btn btn-warning w-auto" onclick="changeType(${user.u_id})">Change Type</a>
                                         <a href="#" class="btn btn-danger w-auto" onclick="dismissChef(${user.u_id})">Delete</a>
                                     </div>
                                 </div>
@@ -62,6 +63,37 @@ $(document).ready(function () {
 
     // Call function to fetch and populate cards for users
     fetchAndPopulateCards();
+    
+    $('#account-form').submit(function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        const formData = {
+            user_id: $('#user_id').val(),
+            username: $('#username').val(),
+            password: $('#password').val(),
+            full_name: $('#full_name').val(),
+            email: $('#email').val(),
+            phone: $('#phone').val(),
+            address: $('#address').val(),
+            old_password: $('#old_password').val()
+        };
+
+        $.ajax({
+            url: 'php/update_chef_details.php',
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function(response) {
+                alert(response.message);
+                window.location.reload(); // Go back to the referring page
+            },
+            error: function(xhr, status, error) {
+                alert('An error occurred: ' + xhr.responseText);
+            }
+        });
+    });
+    
+    
 });
 
 function fetchChefInfo(u_id) {
@@ -94,11 +126,11 @@ function editChef(ChefInfo) {
     $('#editChefModal').modal('show');
 }
 
-function dismissChef(u_id) {
-    if (confirm("Are you sure you want to remove this chef?")) {
+function changeType(u_id) {
+    if (confirm("Are you sure you want to change user type?")) {
         $.ajax({
             type: 'POST',
-            url: 'php/delete_chef.php', // Replace with your backend endpoint
+            url: 'php/change_cheftype.php', // Replace with your backend endpoint
             data: { u_id: u_id },
             dataType: 'json',
             success: function (response) {
@@ -114,3 +146,57 @@ function dismissChef(u_id) {
         });
     }
 }
+
+function dismissChef(u_id) {
+    if (confirm("Are you sure you want to remove this chef?")) {
+        $.ajax({
+            type: 'DELETE',
+            url: 'php/delete_chef.php',
+            data: JSON.stringify({ u_id: u_id }),
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function (response) {
+                alert(response.message);
+                window.location.reload(); // Reload the page after deletion
+                
+            },
+            error: function (xhr, status, error) {
+                alert('An error occurred: ' + xhr.responseText);
+            }
+        });
+    }
+}
+
+document.getElementById('editChefBtn').addEventListener('click', function() {
+    // Get form data
+    const formData = new FormData(document.getElementById('editChefForm'));
+
+    // Get user_id from hidden input field
+    const user_id = formData.get('user_id');
+
+    // Create an object to hold the form data
+    let data = {};
+    formData.forEach((value, key) => {
+        data[key] = value;
+    });
+
+    // Send PUT request using AJAX
+    $.ajax({
+        url: 'php/edit_chef.php',
+        type: 'PUT',
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        success: function(response) {
+            // Handle response
+            console.log(response);
+            alert(response.message);
+            window.location.reload(); // Reload the page after submission
+        },
+        error: function(xhr, status, error) {
+            // Handle error
+            console.error(xhr.responseText);
+        }
+    });
+});
+
+

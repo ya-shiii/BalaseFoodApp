@@ -5,24 +5,25 @@ include 'db_connect.php';
 // Start session
 session_start();
 
-// Check if form is submitted
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+// Check if form is submitted via PUT method
+if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
+    // Get the raw input data
+    $data = json_decode(file_get_contents('php://input'), true);
+
     // Sanitize inputs to prevent SQL injection
-    $full_name = $conn->real_escape_string($_POST['full_name']);
-    $u_name = $conn->real_escape_string($_POST['u_name']);
-    $password = $conn->real_escape_string($_POST['password']);
-    $email = $conn->real_escape_string($_POST['email']);
-    $phone = $conn->real_escape_string($_POST['phone']);
-    $address = $conn->real_escape_string($_POST['address']);
+    $full_name = $conn->real_escape_string($data['full_name']);
+    $u_name = $conn->real_escape_string($data['u_name']);
+    $password = $conn->real_escape_string($data['password']);
+    $email = $conn->real_escape_string($data['email']);
+    $phone = $conn->real_escape_string($data['phone']);
+    $address = $conn->real_escape_string($data['address']);
 
     // Check for duplicate username in customers
     $check_username_query = "SELECT * FROM customers WHERE username='$u_name'";
     $check_username_result = $conn->query($check_username_query);
     if ($check_username_result->num_rows > 0) {
         // Username already exists
-        echo '<script>alert("Username already exists.");</script>';
-        echo '<script>window.location.href = "' . $_SERVER['HTTP_REFERER'] . '";</script>';
-
+        echo json_encode(['success' => false, 'message' => 'Username already exists in customers.']);
         exit();
     }
 
@@ -31,9 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $check_chef_username_result = $conn->query($check_chef_username_query);
     if ($check_chef_username_result->num_rows > 0) {
         // Username already exists
-        echo '<script>alert("Username already exists.");</script>';
-        echo '<script>window.location.href = "' . $_SERVER['HTTP_REFERER'] . '";</script>';
-
+        echo json_encode(['success' => false, 'message' => 'Username already exists in in_charge.']);
         exit();
     }
 
@@ -42,9 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $check_email_result = $conn->query($check_email_query);
     if ($check_email_result->num_rows > 0) {
         // Email already exists
-        echo '<script>alert("Email already exists.");</script>';
-        echo '<script>window.location.href = "' . $_SERVER['HTTP_REFERER'] . '";</script>';
-
+        echo json_encode(['success' => false, 'message' => 'Email already exists in customers.']);
         exit();
     }
 
@@ -53,44 +50,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $check_chef_email_result = $conn->query($check_chef_email_query);
     if ($check_chef_email_result->num_rows > 0) {
         // Email already exists
-        echo '<script>alert("Email already exists.");</script>';
-        echo '<script>window.location.href = "' . $_SERVER['HTTP_REFERER'] . '";</script>';
-
+        echo json_encode(['success' => false, 'message' => 'Email already exists in in_charge.']);
         exit();
     }
 
     // Check if the username is "admin"
     if ($u_name === 'admin') {
         // Username cannot be "admin"
-        echo '<script>alert("Username cannot be \'admin\'");</script>';
-        echo '<script>window.location.href = "' . $_SERVER['HTTP_REFERER'] . '";</script>';
-
+        echo json_encode(['success' => false, 'message' => 'Username cannot be "admin".']);
         exit();
     }
-
 
     // Insert the new chef into the database
     $insert_query = "INSERT INTO in_charge (full_name, username, password, email, phone, address) 
                     VALUES ('$full_name', '$u_name', '$password', '$email', '$phone', '$address')";
     if ($conn->query($insert_query) === TRUE) {
         // Chef added successfully
-        echo '<script>alert("New chef added successfully.");</script>';
-        echo '<script>window.location.href = "' . $_SERVER['HTTP_REFERER'] . '";</script>';
-        exit();
+        echo json_encode(['success' => true, 'message' => 'New chef added successfully.']);
     } else {
         // Error inserting chef
-        echo '<script>alert("Error adding new chef.");</script>';
-        echo '<script>window.location.href = "' . $_SERVER['HTTP_REFERER'] . '";</script>';
-        exit();
+        echo json_encode(['success' => false, 'message' => 'Error adding new chef.']);
     }
 } else {
-    // Form not submitted
-    echo '<script>alert("Form not submitted.");</script>';
-    echo '<script>window.location.href = "' . $_SERVER['HTTP_REFERER'] . '";</script>';
-    
+    // Request method is not PUT
+    echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
 }
 
 // Close database connection
 $conn->close();
-exit();
 ?>

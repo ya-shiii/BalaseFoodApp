@@ -1,25 +1,42 @@
 <?php
-// Include the database connection
 include 'db_connect.php';
 
-// Check if order_id is provided
-if (isset($_POST['order_id'])) {
-    // Sanitize the input to prevent SQL injection
-    $order_id = $_POST['order_id'];
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-    // Delete the order
-    $query = "DELETE FROM order_list WHERE order_id = $order_id";
+// Check if the request method is DELETE
+if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
+    // Read the input from the DELETE request
+    $data = json_decode(file_get_contents('php://input'), true);
 
-    if ($conn->query($query) === TRUE) {
-        // Successfully deleted
-        echo "Order deleted successfully!";
+    if (json_last_error() === JSON_ERROR_NONE) {
+        // Check if order_id is provided
+        if (isset($data['order_id'])) {
+            // Sanitize the input to prevent SQL injection
+            $order_id = intval($data['order_id']); // Use intval to ensure it's an integer
+
+            // Delete the order
+            $query = "DELETE FROM order_list WHERE order_id = $order_id";
+
+            if ($conn->query($query) === TRUE) {
+                // Successfully deleted
+                echo json_encode(array("success" => true, "message" => "Order deleted successfully!"));
+            } else {
+                // Error deleting order
+                echo json_encode(array("success" => false, "error" => "Error deleting order: " . $conn->error));
+            }
+        } else {
+            // If order_id is not provided
+            echo json_encode(array("success" => false, "error" => "Order ID not provided."));
+        }
     } else {
-        // Error deleting order
-        echo "Error deleting order: " . $conn->error;
+        // Invalid JSON data
+        echo json_encode(array("success" => false, "error" => "Invalid JSON data."));
     }
 } else {
-    // If order_id is not provided
-    echo "Order ID not provided.";
+    // Invalid request method
+    echo json_encode(array("success" => false, "error" => "Invalid request method."));
 }
 
 // Close the database connection

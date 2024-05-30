@@ -21,10 +21,10 @@
                 <a href="php/logout.php" class="btn btn-danger h-full mr-2 mt-2">Logout</a>
             </div>
             <div class="justify-content-center align-items-center mb-3">
-                <span class="display-4 mr-2 mt-2" id="totalToPay">Total to-pay: $0.00</span>
+                <span class="display-4 mr-2 mt-2" id="totalToPay">Total to-pay: ₱ 0.00</span>
             </div>
             <div class="justify-content-center align-items-center">
-                <a href="php/check-out-cart.php" class="btn btn-primary rounded-pill mr-2 mt-2" id="checkOutButton">Check-out</a>
+                <button class="btn btn-primary rounded-pill mr-2 mt-2" id="checkOutButton">Check-out</button>
             </div>
 
         </div>
@@ -42,7 +42,7 @@
             <div class="modal-dialog bg-dark text-white" role="document">
                 <div class="modal-content bg-dark text-white">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="editOrderModalLabel">Edit Order Amount</h5>
+                        <h5 class="modal-title" id="editOrderModalLabel">Edit Order Quantity</h5>
                         <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -66,7 +66,7 @@
                                 <input type="text" class="form-control" id="orderItemName" name="item_name" readonly>
                             </div>
                             <div class="form-group">
-                                <label for="orderItemAmount">Amount</label>
+                                <label for="orderItemAmount">Quantity</label>
                                 <input type="number" class="form-control" id="orderItemAmount" name="amount" required>
                             </div>
                             <!-- Buttons Section -->

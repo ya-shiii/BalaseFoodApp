@@ -51,36 +51,34 @@ $(document).ready(function () {
 
     // Fetch and populate account details on page load
     fetchAccountDetails();
+    
+    
+    $('#account-form').on('submit', function(event) {
+        event.preventDefault(); // Prevent the default form submission
 
-    // Function to update account details
-    function updateAccountDetails(formData) {
+        const formData = $(this).serializeArray();
+        const data = {};
+
+        formData.forEach(item => {
+            data[item.name] = item.value;
+        });
+
         $.ajax({
-            type: 'POST',
-            url: 'php/update_customer_details.php',
-            data: formData,
-            dataType: 'json',
-            success: function (data) {
-                if (data.success) {
-                    alert('Account details updated successfully.');
-                } else {
-                    alert('Failed to update account details: ' + data.error);
-                }
+            url: 'php/update_customer_details.php', // URL of your PHP file
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: function(response) {
+                alert('Account details updated successfully.');
+                window.location.href = document.referrer;
             },
-            error: function (xhr, status, error) {
-                console.error("Error updating account details:", error);
-                alert('Failed to update account details.');
+            error: function(xhr, status, error) {
+                alert('Error: ' + xhr.responseText);
             }
         });
-    }
-
-    // Event listener for form submission
-    $('#account-form').submit(function (event) {
-        event.preventDefault();
-
-        var formData = $(this).serialize();
-        updateAccountDetails(formData);
     });
-
+    
+    
     // Logout functionality
     $('#logout-link').click(function (event) {
         event.preventDefault();

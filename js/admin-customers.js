@@ -41,6 +41,7 @@ $(document).ready(function () {
                                     <p class="card-text">Email: ${user.email}</p>
                                     <p class="card-text">Phone number: ${user.phone}</p>
                                     <p class="card-text">Total Orders: ${user.num_orders}</p>
+                                    <a href="#" class="btn btn-warning w-auto" onclick="changeType(${user.user_id})">Change Type</a>
                                     <a href="#" class="btn btn-danger w-auto" onclick="deactivateUser(${user.user_id})">Delete Account</a>
                                 </div>
                             </div>
@@ -62,14 +63,36 @@ $(document).ready(function () {
 
 });
 
+function changeType(u_id) {
+    if (confirm("Are you sure you want to change user type?")) {
+        $.ajax({
+            type: 'POST',
+            url: 'php/change_customertype.php', // Replace with your backend endpoint
+            data: { u_id: u_id },
+            dataType: 'json',
+            success: function (response) {
+                // Handle success response
+                console.log(response.message);
+                alert(response.message);
+                window.location.reload(); // Reload the page after deletion
+            },
+            error: function (xhr, status, error) {
+                // Handle error
+                console.error(error);
+            }
+        });
+    }
+}
+
 // Function to deactivate user
 function deactivateUser(user_id) {
-    // Perform action to deactivate user with given u_id
+    // Perform action to deactivate user with given user_id
     console.log(`Deactivating user with ID: ${user_id}`);
     $.ajax({
-        type: 'POST',
+        type: 'DELETE',
         url: 'php/deactivate_user.php', // Assuming this is the endpoint to handle deactivation
-        data: { user_id: user_id },
+        data: JSON.stringify({ user_id: user_id }), // Send data as JSON string
+        contentType: 'application/json', // Set content type to JSON
         dataType: 'json',
         success: function (response) {
             // Handle success response
@@ -80,6 +103,8 @@ function deactivateUser(user_id) {
         error: function (xhr, status, error) {
             // Handle error
             console.error(error);
+            alert('An error occurred: ' + xhr.responseText);
         }
     });
 }
+

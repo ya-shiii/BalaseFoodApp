@@ -1,24 +1,22 @@
 <?php
-// Include the database connection
 include 'db_connect.php';
-
-// Start the session
 session_start();
 
 // Check if customer_id is set in session
 if (!isset($_SESSION['user_id'])) {
-    echo '<script>alert("Customer not logged in.");</script>';
-    echo '<script>window.location.href = "' . $_SERVER['HTTP_REFERER'] . '";</script>';
+    echo json_encode(array("error" => "Customer not logged in"));
     exit();
 }
 
 // Check if form is submitted
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
+    $data = json_decode(file_get_contents('php://input'), true);
     $customer_id = $_SESSION['user_id'];
-    $item_id = $_POST['item_id'];
-    $item_name = $_POST['item_name'];
-    $amount = $_POST['amount'];
-    $price = $_POST['price'];
+    $customer_name = $_SESSION['full_name'];
+    $item_id = $data['item_id'];
+    $item_name = $data['item_name'];
+    $amount = $data['amount'];
+    $price = $data['price'];
     $total = $amount * $price;
     $status = 'cart';
 
@@ -36,29 +34,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                          WHERE order_id = " . $row['order_id'];
 
         if ($conn->query($update_query) === TRUE) {
-            echo '<script>alert("Item updated in cart successfully.");</script>';
-            echo '<script>window.location.href = "' . $_SERVER['HTTP_REFERER'] . '";</script>';
+            echo json_encode(array("success" => true));
         } else {
-            echo '<script>alert("Error updating item in cart.");</script>';
-            echo '<script>window.location.href = "' . $_SERVER['HTTP_REFERER'] . '";</script>';
+            echo json_encode(array("success" => false, "error" => "Error updating item in cart"));
         }
     } else {
         // Item does not exist in the cart, insert a new row
-        $insert_query = "INSERT INTO order_list (customer_id, item_id, item_name, amount, price, total, ordered, status) 
-                         VALUES ('$customer_id', '$item_id', '$item_name', '$amount', '$price', '$total', NOW(), '$status')";
+        $insert_query = "INSERT INTO order_list (customer_id, customer_name, item_id, item_name, amount, price, total, ordered, status) 
+                         VALUES ('$customer_id', '$customer_name', '$item_id', '$item_name', '$amount', '$price', '$total', NOW(), '$status')";
 
         if ($conn->query($insert_query) === TRUE) {
-            echo '<script>alert("Item added to cart successfully.");</script>';
-            echo '<script>window.location.href = "' . $_SERVER['HTTP_REFERER'] . '";</script>';
+            echo json_encode(array("success" => true));
         } else {
-            echo '<script>alert("Error adding item to cart.");</script>';
-            echo '<script>window.location.href = "' . $_SERVER['HTTP_REFERER'] . '";</script>';
+            echo json_encode(array("success" => false, "error" => "Error adding item to cart"));
         }
     }
 
     $conn->close();
 } else {
-    echo '<script>alert("Invalid request method.");</script>';
-    echo '<script>window.location.href = "' . $_SERVER['HTTP_REFERER'] . '";</script>';
+    echo json_encode(array("success" => false, "error" => "Invalid request method"));
 }
 ?>

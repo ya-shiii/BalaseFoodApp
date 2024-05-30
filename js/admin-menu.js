@@ -35,7 +35,7 @@ $(document).ready(function () {
                     // Loop through each user and populate cards
                     data.forEach(function (user) {
                         var card = `
-                            <div class="col-lg-4 col-md-6 col-sm-10 my-2">
+                            <div class="col-lg-4 col-md-6 col-sm-10 my-2" data-name="${user.name}">
                                 <div class="card h-100 bg-dark text-white">
                                     <div class="card-body">
                                         <div class="mb-4 col-12" style="height: 200px; overflow:hidden">
@@ -44,10 +44,10 @@ $(document).ready(function () {
                                         
                                         <h5 class="card-text text-bold">${user.name}</h5>
                                         <p class="card-text">${user.description}</p>
-                                        <p class="card-text">Price: ${user.price}</p>
+                                        <p class="card-text">Price: Php ${user.price}</p>
                                         <p class="font-italic text-success">${user.category}</p>
                                         <a href="#" class="btn btn-primary w-auto" onclick="fetchItemInfo(${user.item_id})">Edit</a>
-                                        <a href="#" class="btn btn-danger w-auto" onclick="dismissItem(${user.item_id})">Delete</a>
+                                        <a href="#" class="btn btn-danger w-auto" onclick="deleteItem(${user.item_id})">Delete</a>
                                     </div>
                                 </div>
                             </div>`;
@@ -66,6 +66,66 @@ $(document).ready(function () {
 
     // Call function to fetch and populate cards for users
     fetchAndPopulateCards();
+    
+    $('#addItemBtn').click(function(event) {
+        event.preventDefault(); // Prevent default form submission
+    
+        // Get form data
+        var formData = new FormData($('#addItemForm')[0]);
+    
+        // Send AJAX request
+        $.ajax({
+            type: 'POST',
+            url: 'php/add_item.php', // Replace with your backend endpoint
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                // Handle success response
+                console.log(response);
+                alert(response.message);
+                window.location.reload(); // Reload the page after submission
+            },
+            error: function(xhr, status, error) {
+                // Handle error
+                console.error(xhr.responseText);
+            }
+        });
+    });
+    
+    
+    
+    $('#editItemBtn').click(function(event) {
+        event.preventDefault(); // Prevent default form submission
+    
+        // Get form data
+        var formData = new FormData($('#editItemForm')[0]);
+    
+        // Get item_id from hidden input field
+        var itemId = $('#item_id').val();
+        formData.append('item_id', itemId); // Add item_id to the formData
+    
+        // Send POST request using AJAX
+        $.ajax({
+            type: 'POST',
+            url: 'php/edit_item.php', // Replace with your backend endpoint
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                // Handle success response
+                console.log(response);
+                alert(response.message);
+                window.location.reload(); // Reload the page after submission
+            },
+            error: function(xhr, status, error) {
+                // Handle error
+                console.error(xhr.responseText);
+            }
+        });
+    });
+    
+
 });
 
 function fetchItemInfo(item_id) {
@@ -101,12 +161,13 @@ function editItem(ItemInfo) {
 }
 
 
-function dismissItem(item_id) {
+function deleteItem(item_id) {
     if (confirm("Are you sure you want to remove this item?")) {
         $.ajax({
-            type: 'POST',
+            type: 'DELETE',
             url: 'php/delete_item.php', // Replace with your backend endpoint
-            data: { item_id: item_id },
+            data: JSON.stringify({ item_id: item_id }),
+            contentType: 'application/json',
             dataType: 'json',
             success: function (response) {
                 // Handle success response
@@ -121,3 +182,34 @@ function dismissItem(item_id) {
         });
     }
 }
+
+
+function validatePositiveInteger(input) {
+    const value = parseInt(input.value, 10);
+    
+    if (isNaN(value) || value < 1) {
+        input.value = '';
+    } else {
+        input.value = value;
+    }
+}
+
+function preventInvalidKeys(e) {
+    if (e.key === '-' || e.key === '.' || e.key === 'e') {
+        e.preventDefault();
+    }
+}
+
+const itemPrice = document.getElementById('ItemPrice');
+const editItemPrice = document.getElementById('editItemPrice');
+
+[itemPrice, editItemPrice].forEach(input => {
+    input.addEventListener('input', function(e) {
+        validatePositiveInteger(e.target);
+    });
+
+    input.addEventListener('keydown', function(e) {
+        preventInvalidKeys(e);
+    });
+});
+

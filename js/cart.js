@@ -44,9 +44,9 @@ $(document).ready(function () {
                                     </div>
                         
                                     <h5 class="card-text text-bold">${item.name}</h5>
-                                    <p class="card-text">Price each: ${item.price}</p>
+                                    <p class="card-text">Price each: Php ${item.price}</p>
                                     <p class="card-text">Amount Ordered: <span class="text-bold">${item.amount}</span></p>
-                                    <p class="font-italic text-success">Total: ${item.total}</p>
+                                    <p class="font-italic text-success">Total: Php ${item.total}</p>
                                     <a href="#" class="btn btn-primary w-auto mr-2" onclick="editOrder(${item.order_id})">Edit Amount</a>
                                     <a href="#" class="btn btn-danger w-auto" onclick="deleteOrder(${item.order_id})">Delete</a>
                                 </div>
@@ -77,10 +77,10 @@ $(document).ready(function () {
             dataType: 'json',
             success: function(data) {
                 if (data.total_amount == null) {
-                    $('#totalToPay').text(`Total to-pay: $0`);
+                    $('#totalToPay').text(`No orders yet`);
                 } else if (data.total_amount !== undefined) {
                     const totalAmount = parseFloat(data.total_amount).toFixed(2);
-                    $('#totalToPay').text(`Total to-pay: $${totalAmount}`);
+                    $('#totalToPay').text(`Total to-pay: Php ${totalAmount}`);
                 }else {
                     alert('Error fetching total amount.');
                 }
@@ -93,7 +93,23 @@ $(document).ready(function () {
 
     // Call the function to fetch the total amount when the page loads
     fetchTotalAmount();
+    
+    $('#checkOutButton').on('click', function(event) {
+        event.preventDefault(); // Prevent the default behavior
 
+        $.ajax({
+            url: 'php/check-out-cart.php', // URL of the PHP file
+            type: 'PUT',
+            contentType: 'application/json',
+            success: function(response) {
+                alert('Order checked out successfully!');
+                window.location.href = document.referrer;
+            },
+            error: function(xhr, status, error) {
+                alert('Error: ' + xhr.responseText);
+            }
+        });
+    });
 
     // Logout functionality
     $('#logout-link').click(function (event) {
@@ -133,25 +149,24 @@ function editOrder(order_id) {
 }
 
 function deleteOrder(order_id) {
-    // Confirmation dialog before deleting the order
     if (confirm("Are you sure you want to delete this order?")) {
         $.ajax({
             url: 'php/delete_order.php', // Replace with your PHP file for deleting orders
-            type: 'POST',
-            data: { order_id: order_id },
-            success: function (response) {
-                // Display the response in an alert
-                alert(response);
-                
-                // Reload the page to reflect the changes
+            type: 'DELETE',
+            contentType: 'application/json',
+            data: JSON.stringify({ order_id: order_id }),
+            success: function(response) {
+                alert('Order deleted successfully.');
                 location.reload();
             },
-            error: function () {
-                alert('Error deleting order.');
+            error: function(xhr, status, error) {
+                alert('Error deleting order: ' + xhr.responseText);
             }
         });
     }
 }
+
+
 
 
 

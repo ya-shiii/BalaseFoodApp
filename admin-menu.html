@@ -20,16 +20,39 @@
                     data-target="#addItemModal">Add Item &plus;</a>
                 <a href="php/logout.php" class="btn btn-danger h-full">Logout</a>
             </div>
-
+            <div class="w-50 mx-auto input-group mb-5" id="searchbar">
+                <input type="text" id="searchInput" class="form-control" placeholder="Search by item name...">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="button" id="searchButton">Search</button>
+                </div>
+            </div>         
         </div>
 
         <!-- Card-like div for customer details -->
         <div class="container">
-            <div class="row mt-5">
-                <!-- customer cards will be populated here -->
+            <div class="row mt-5" id="itemContainer">
+                <!-- Dynamically generated item cards will be inserted here -->
             </div>
         </div>
 
+        <!-- Modal for search results -->
+        <div class="modal fade" id="searchResultsModal" tabindex="-1" role="dialog" aria-labelledby="searchResultsModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="searchResultsModalLabel">Search Results</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row" id="searchResultsContainer">
+                            <!-- Search results will be displayed here as cards -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- Modal for adding a Item -->
         <div class="modal fade bg-light" id="addItemModal" tabindex="-1" role="dialog"
             aria-labelledby="addItemModalLabel" aria-hidden="true">
@@ -43,7 +66,7 @@
                     </div>
                     <div class="modal-body bg-dark text-white">
                         <!-- Form to add a Item -->
-                        <form id="addItemForm" method="post" action="php/add_item.php" enctype="multipart/form-data">
+                        <form id="addItemForm" enctype="multipart/form-data">
                             <!-- Form fields for Item details -->
                             <div class="form-group">
                                 <label for="ItemName">Item Name</label>
@@ -56,9 +79,9 @@
                                     placeholder="Enter description" style="height: 150px;"></textarea>
                             </div>
                             <div class="form-group">
-                                <label for="ItemPrice">Price</label>
+                                <label for="ItemPrice">Price (₱)</label>
                                 <input type="number" class="form-control" id="ItemPrice" name="price" required
-                                    placeholder="Enter price">
+                                    placeholder="Enter price" min="1" step="1">
                             </div>
                             <div class="form-group">
                                 <label for="ItemCategory">Category</label>
@@ -66,7 +89,7 @@
                                     <option value="">Select category</option>
                                     <option value="Meal">Meal</option>
                                     <option value="Beverage">Beverage</option>
-                                    <option value="Snacks">Snacks</option>
+                                    <option value="Snack">Snack</option>
                                     <option value="Combo">Combo</option>
                                 </select>
                             </div>
@@ -102,7 +125,7 @@
                             <img id="editItemImage" src="" alt="Item Image" style="width: 100%; height: auto;">
                         </div>
                         <!-- Form to edit a Item -->
-                        <form id="editItemForm" method="post" action="php/edit_Item.php" enctype="multipart/form-data">
+                        <form id="editItemForm" enctype="multipart/form-data">
                             <!-- Form fields for Item details -->
                             <div class="form-group">
                                 <input type="hidden" class="form-control" id="item_id" name="item_id" required>
@@ -116,9 +139,9 @@
                                     placeholder="Enter description" style="height: 150px;"></textarea>
                             </div>
                             <div class="form-group">
-                                <label for="editItemPrice">Price</label>
+                                <label for="editItemPrice">Price (₱)</label>
                                 <input type="number" class="form-control" id="editItemPrice" name="price" required
-                                    placeholder="Enter price">
+                                    placeholder="Enter price"  min="1" step="1">
                             </div>
                             <div class="form-group">
                                 <label for="editItemCategory">Category</label>
@@ -126,7 +149,7 @@
                                     <option value="">Select category</option>
                                     <option value="Meal">Meal</option>
                                     <option value="Beverage">Beverage</option>
-                                    <option value="Snacks">Snacks</option>
+                                    <option value="Snack">Snacks</option>
                                     <option value="Combo">Combo</option>
                                 </select>
                             </div>
@@ -157,6 +180,7 @@
 
     <!-- Custom JavaScript -->
     <script src="js/admin-menu.js"></script>
+    <script src="js/search.js"></script>
 </body>
 
 </html>

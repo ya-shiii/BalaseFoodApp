@@ -3,23 +3,25 @@
 // Include the database connection
 include 'db_connect.php';
 
-// Initialize an array to store chefss
-$chefs = array();
+// Get the search query
+$searchQuery = isset($_GET['query']) ? $_GET['query'] : '';
 
-// Query to fetch chefss from in_charge table
-$query = "SELECT * FROM menu_list";
+// Initialize an array to store items
+$items = array();
+
+// Prepare the SQL statement with a wildcard search
+$query = "SELECT * FROM menu_list WHERE name LIKE '%$searchQuery%'";
 $result = $conn->query($query);
 
 // Check if query was successful
 if ($result && $result->num_rows > 0) {
-    // Fetch chefss and add them to the array
+    // Fetch items and add them to the array
     while ($row = $result->fetch_assoc()) {
         
         // Generate the filename string
         $filename = str_replace(' ', '_', $row['name']) . '.jpg';
 
-
-        $chef = array(
+        $item = array(
             'item_id' => $row['item_id'],
             'name' => $row['name'],
             'description' => $row['description'],
@@ -27,10 +29,10 @@ if ($result && $result->num_rows > 0) {
             'category' => $row['category'],
             'filename' => $filename
         );
-        $chefs[] = $chef;
+        $items[] = $item;
     }
 } else {
-    // No chefss found
+    // No items found
     echo json_encode(array());
     exit(); // Stop further execution
 }
@@ -39,4 +41,5 @@ if ($result && $result->num_rows > 0) {
 $conn->close();
 
 // Encode the array as JSON and echo
-echo json_encode($chefs);
+echo json_encode($items);
+?>

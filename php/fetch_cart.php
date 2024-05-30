@@ -10,7 +10,7 @@ $user_id = $_SESSION['user_id'];
 $orders = array();
 
 // Query to fetch orders from in_charge table
-$query = "SELECT * FROM order_list WHERE customer_id = $user_id AND `status` = 'Cart'";
+$query = "SELECT * FROM order_list WHERE customer_id = $user_id AND `status` = 'Cart' ORDER BY ordered DESC";
 $result = $conn->query($query);
 
 // Check if query was successful

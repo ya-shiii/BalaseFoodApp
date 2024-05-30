@@ -24,32 +24,7 @@ $(document).ready(function () {
     // Fetch and display full name on page load
     fetchFullName();
 
-    // Function to format timestamp
-    function formatTimestamp(timestamp) {
-        // Convert timestamp to Date object
-        var date = new Date(timestamp);
 
-        // Calculate the time difference in milliseconds
-        var now = new Date();
-        var timeDifference = now.getTime() - date.getTime();
-
-        // Convert milliseconds to seconds
-        var seconds = Math.floor(timeDifference / 1000);
-
-        // Calculate time difference in human-readable format
-        if (seconds < 60) {
-            return seconds + ' second(s) ago';
-        } else if (seconds < 3600) {
-            var minutes = Math.floor(seconds / 60);
-            return minutes + ' minute(s) ago';
-        } else if (seconds < 86400) {
-            var hours = Math.floor(seconds / 3600);
-            return hours + ' hour(s) ago';
-        } else {
-            // Format the date using toLocaleString for older timestamps
-            return date.toLocaleString();
-        }
-    }
 
     // Function to get status badge class
     function getStatusBadgeClass(status) {
@@ -82,14 +57,14 @@ $(document).ready(function () {
                     <div class="col-lg-4 col-md-6 col-sm-10 my-2">
                         <div class="card h-100">
                             <div class="card-header bg-dark text-white">
-                                ${formatTimestamp(order.ordered_time)}
+                                ${order.ordered_time}
                             </div>
                             <div class="card-body">
                                 <p>Customer: <span class="text-bold">${order.customer_name}</span></p>
                                 <ul class="list-unstyled">
                                     ${formatItemsList(order.item_names)}
                                 </ul>
-                                <p>Total Payment: $${order.total}</p>
+                                <p>Total Payment: Php ${order.total}</p>
                                 <p>Status: <span class="badge ${getStatusBadgeClass(order.status)}">${order.status}</span></p>
                                 <div class="btn-group">
                                     ${renderStatusButton(order.status, order.customer_id, order.ordered_time)}

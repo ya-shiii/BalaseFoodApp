@@ -21,6 +21,12 @@
                 <a href="php/logout.php" class="btn btn-danger h-full mt-2">Logout</a>
             </div>
             <div class="justify-content-center align-items-center mb-5">
+                <div class="w-50 mx-auto input-group mb-5" id="searchbar">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Search by item name...">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="button" id="searchButton">Search</button>
+                    </div>
+                </div>
                 <a href="menu.html" class="btn btn-secondary rounded-pill mr-2 mt-2 ">All</a>
                 <a href="menu-beverage.html" class="btn btn-secondary rounded-pill mr-2 mt-2 ">Beverages</a>
                 <a href="menu-snacks.html" class="btn btn-secondary rounded-pill mr-2 mt-2 ">Snacks</a>
@@ -30,8 +36,27 @@
 
         <!-- Card-like div for customer details -->
         <div class="container">
-            <div class="row mt-5">
-                <!-- customer cards will be populated here -->
+            <div class="row mt-5" id="itemContainer">
+                <!-- Dynamically generated item cards will be inserted here -->
+            </div>
+        </div>
+
+        <!-- Modal for search results -->
+        <div class="modal fade" id="searchResultsModal" tabindex="-1" role="dialog" aria-labelledby="searchResultsModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="searchResultsModalLabel">Search Results</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row" id="searchResultsContainer">
+                            <!-- Search results will be displayed here as cards -->
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -51,7 +76,7 @@
                             <img id="orderItemImage" src="" alt="Item Image" class="img-fluid w-full mb-3">
                         </div>
                         <!-- Form to order an item -->
-                        <form id="orderItemForm" method="post" action="php/order_item.php">
+                        <form id="orderItemForm">
                             <div class="form-group">
                                 <label for="orderItemName">Item Name</label>
                                 <input type="text" class="form-control" id="orderItemName" name="item_name" readonly>
@@ -62,7 +87,7 @@
                                     style="height: 150px;"></textarea>
                             </div>
                             <div class="form-group">
-                                <label for="orderItemPrice">Price</label>
+                                <label for="orderItemPrice">Price (₱)</label>
                                 <input type="number" class="form-control" id="orderItemPrice" name="price" readonly>
                             </div>
                             <div class="form-group">
@@ -70,8 +95,8 @@
                                 <input type="text" class="form-control" id="orderItemCategory" readonly>
                             </div>
                             <div class="form-group">
-                                <label for="orderItemAmount">Amount</label>
-                                <input type="number" class="form-control" id="orderItemAmount" name="amount" required>
+                                <label for="orderItemAmount">Quantity</label>
+                                <input type="number" class="form-control" id="orderItemAmount" name="amount" required min="1" step="1">
                             </div>
                             <input type="hidden" id="orderItemId" name="item_id">
                             <div class="modal-footer">
@@ -97,6 +122,8 @@
 
     <!-- Custom JavaScript -->
     <script src="js/menu-meals.js"></script>
+    <script src="js/search.js"></script>
+    <script src="js/orderitem.js"></script>
 </body>
 
 </html>

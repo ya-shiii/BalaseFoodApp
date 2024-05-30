@@ -67,7 +67,7 @@
                             <div class="form-group">
                                 <label for="ChefPhone">Phone</label>
                                 <input type="text" class="form-control" id="ChefPhone" name="phone" required
-                                    placeholder="Enter phone number">
+                                    placeholder="Enter phone number" min="1" step="1">
                             </div>
                             <div class="form-group">
                                 <label for="ChefAddress">Address</label>
@@ -98,7 +98,7 @@
                     </div>
                     <div class="modal-body">
                         <!-- Form to edit a Chef -->
-                        <form id="editChefForm" method="post" action="php/edit_chef.php">
+                        <form id="editChefForm">
                             <!-- Form fields for Chef details -->
                             <div class="form-group" hidden>
                                 <label for="user_id">Chef Name</label>
@@ -127,7 +127,7 @@
                             <div class="form-group">
                                 <label for="editChefPhone">Phone</label>
                                 <input type="text" class="form-control" id="editChefPhone" name="phone" required
-                                    placeholder="Enter phone number">
+                                    placeholder="Enter phone number" min="1" step="1">
                             </div>
                             <div class="form-group">
                                 <label for="editChefAddress">Address</label>

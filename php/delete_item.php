@@ -5,28 +5,38 @@ include 'db_connect.php';
 // Initialize response array
 $response = array();
 
-// Check if item_id is set and not empty
-if (isset($_POST['item_id']) && !empty($_POST['item_id'])) {
-    // Sanitize the input to prevent SQL injection
-    $item_id = mysqli_real_escape_string($conn, $_POST['item_id']);
+// Check if the request method is DELETE
+if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
+    // Get the raw input data
+    $data = json_decode(file_get_contents('php://input'), true);
 
-    // Construct the DELETE query
-    $delete_query = "DELETE FROM menu_list WHERE item_id = '$item_id'";
+    // Check if item_id is set and not empty
+    if (isset($data['item_id']) && !empty($data['item_id'])) {
+        // Sanitize the input to prevent SQL injection
+        $item_id = mysqli_real_escape_string($conn, $data['item_id']);
 
-    // Execute the query
-    if (mysqli_query($conn, $delete_query)) {
-        // Query executed successfully
-        $response['success'] = true;
-        $response['message'] = 'Menu item removed successfully.';
+        // Construct the DELETE query
+        $delete_query = "DELETE FROM menu_list WHERE item_id = '$item_id'";
+
+        // Execute the query
+        if (mysqli_query($conn, $delete_query)) {
+            // Query executed successfully
+            $response['success'] = true;
+            $response['message'] = 'Menu item removed successfully.';
+        } else {
+            // Error executing the query
+            $response['success'] = false;
+            $response['message'] = 'Error: ' . mysqli_error($conn);
+        }
     } else {
-        // Error executing the query
+        // item_id parameter not set or empty
         $response['success'] = false;
-        $response['message'] = 'Error: ' . mysqli_error($conn);
+        $response['message'] = 'Invalid request.';
     }
 } else {
-    // item_id parameter not set or empty
+    // Request method is not DELETE
     $response['success'] = false;
-    $response['message'] = 'Invalid request.';
+    $response['message'] = 'Invalid request method.';
 }
 
 // Close the database connection

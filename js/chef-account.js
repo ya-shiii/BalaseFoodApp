@@ -52,35 +52,6 @@ $(document).ready(function () {
     // Fetch and populate account details on page load
     fetchAccountDetails();
 
-    // Function to update account details
-    function updateAccountDetails(formData) {
-        $.ajax({
-            type: 'POST',
-            url: 'php/update_chef_details.php',
-            data: formData,
-            dataType: 'json',
-            success: function (data) {
-                if (data.success) {
-                    alert('Account details updated successfully.');
-                } else {
-                    alert('Failed to update account details: ' + data.error);
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error("Error updating account details:", error);
-                alert('Failed to update account details.');
-            }
-        });
-    }
-
-    // Event listener for form submission
-    $('#account-form').submit(function (event) {
-        event.preventDefault();
-
-        var formData = $(this).serialize();
-        updateAccountDetails(formData);
-    });
-
     // Logout functionality
     $('#logout-link').click(function (event) {
         event.preventDefault();

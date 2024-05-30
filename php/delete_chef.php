@@ -5,28 +5,38 @@ include 'db_connect.php';
 // Initialize response array
 $response = array();
 
-// Check if u_id is set and not empty
-if (isset($_POST['u_id']) && !empty($_POST['u_id'])) {
-    // Sanitize the input to prevent SQL injection
-    $u_id = mysqli_real_escape_string($conn, $_POST['u_id']);
+// Check if the request method is DELETE
+if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    // Get the JSON input data
+    $data = json_decode(file_get_contents('php://input'), true);
 
-    // Construct the DELETE query
-    $delete_query = "DELETE FROM in_charge WHERE user_id = '$u_id'";
+    // Check if u_id is set and not empty
+    if (isset($data['u_id']) && !empty($data['u_id'])) {
+        // Sanitize the input to prevent SQL injection
+        $u_id = mysqli_real_escape_string($conn, $data['u_id']);
 
-    // Execute the query
-    if (mysqli_query($conn, $delete_query)) {
-        // Query executed successfully
-        $response['success'] = true;
-        $response['message'] = 'Chef removed successfully.';
+        // Construct the DELETE query
+        $delete_query = "DELETE FROM in_charge WHERE user_id = '$u_id'";
+
+        // Execute the query
+        if (mysqli_query($conn, $delete_query)) {
+            // Query executed successfully
+            $response['success'] = true;
+            $response['message'] = 'Chef removed successfully.';
+        } else {
+            // Error executing the query
+            $response['success'] = false;
+            $response['message'] = 'Error: ' . mysqli_error($conn);
+        }
     } else {
-        // Error executing the query
+        // u_id parameter not set or empty
         $response['success'] = false;
-        $response['message'] = 'Error: ' . mysqli_error($conn);
+        $response['message'] = 'Invalid request.';
     }
 } else {
-    // u_id parameter not set or empty
+    // Invalid request method
     $response['success'] = false;
-    $response['message'] = 'Invalid request.';
+    $response['message'] = 'Invalid request method.';
 }
 
 // Close the database connection
