@@ -3,7 +3,7 @@ $(document).ready(function () {
     function fetchFullName() {
         $.ajax({
             type: 'GET',
-            url: 'php/fetch_session.php', // You need to create this file to fetch full name from session
+            url: 'php/fetch_session', // You need to create this file to fetch full name from session
             dataType: 'json',
             success: function (data) {
                 if (data.success && data.role === 'admin') {
@@ -27,7 +27,7 @@ $(document).ready(function () {
     function fetchAndPopulateCards() {
         $.ajax({
             type: 'GET',
-            url: 'php/fetch_menu.php',
+            url: 'php/fetch_menu',
             dataType: 'json',
             success: function (data) {
                 console.log(data); // Add this line to debug the response
@@ -39,7 +39,7 @@ $(document).ready(function () {
                                 <div class="card h-100 bg-dark text-white">
                                     <div class="card-body">
                                         <div class="mb-4 col-12" style="height: 200px; overflow:hidden">
-                                            <img src="img/menu/${user.filename}?t=${new Date().getTime()}" alt="${user.name}" class="img-fluid w-full mb-3">
+                                            <img src="${user.img_path}?t=${new Date().getTime()}" alt="${user.name}" class="img-fluid w-full mb-3">
                                         </div>
                                         
                                         <h5 class="card-text text-bold">${user.name}</h5>
@@ -66,72 +66,75 @@ $(document).ready(function () {
 
     // Call function to fetch and populate cards for users
     fetchAndPopulateCards();
-    
-    $('#addItemBtn').click(function(event) {
+
+    $('#addItemBtn').click(function (event) {
         event.preventDefault(); // Prevent default form submission
-    
+
         // Get form data
         var formData = new FormData($('#addItemForm')[0]);
-    
+
         // Send AJAX request
         $.ajax({
             type: 'POST',
-            url: 'php/add_item.php', // Replace with your backend endpoint
+            url: 'php/add_item', // Replace with your backend endpoint
             data: formData,
             contentType: false,
             processData: false,
-            success: function(response) {
+            success: function (response) {
                 // Handle success response
                 console.log(response);
                 alert(response.message);
-                window.location.reload(); // Reload the page after submission
+
+                window.location.reload(); // Reload the page after alert
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 // Handle error
                 console.error(xhr.responseText);
             }
         });
     });
-    
-    
-    
-    $('#editItemBtn').click(function(event) {
+
+
+
+    $('#editItemBtn').click(function (event) {
         event.preventDefault(); // Prevent default form submission
-    
+
         // Get form data
         var formData = new FormData($('#editItemForm')[0]);
-    
+
         // Get item_id from hidden input field
         var itemId = $('#item_id').val();
         formData.append('item_id', itemId); // Add item_id to the formData
-    
+
         // Send POST request using AJAX
         $.ajax({
             type: 'POST',
-            url: 'php/edit_item.php', // Replace with your backend endpoint
+            url: 'php/edit_item',
             data: formData,
             contentType: false,
             processData: false,
-            success: function(response) {
+            success: function (response) {
                 // Handle success response
                 console.log(response);
                 alert(response.message);
-                window.location.reload(); // Reload the page after submission
+                // Reload the page after the alert is dismissed
+                window.location.reload(); // Reload the page after alert
+
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 // Handle error
                 console.error(xhr.responseText);
             }
         });
     });
-    
+
 
 });
 
 function fetchItemInfo(item_id) {
     $.ajax({
         type: 'POST',
-        url: 'php/fetch_menu_info.php',
+        url: 'php/fetch_menu_info',
         data: { item_id: item_id },
         dataType: 'json',
         success: function (response) {
@@ -153,8 +156,7 @@ function editItem(ItemInfo) {
     $('#editItemCategory').val(ItemInfo.category);
 
     // Generate the image filename
-    var imageUrl = 'img/menu/' + ItemInfo.name.replace(/ /g, '_') + '.jpg';
-    $('#editItemImage').attr('src', imageUrl);
+    $('#editItemImage').attr('src', ItemInfo.img_path);
 
     // Show the edit modal
     $('#editItemModal').modal('show');
@@ -165,7 +167,7 @@ function deleteItem(item_id) {
     if (confirm("Are you sure you want to remove this item?")) {
         $.ajax({
             type: 'DELETE',
-            url: 'php/delete_item.php', // Replace with your backend endpoint
+            url: 'php/delete_item', // Replace with your backend endpoint
             data: JSON.stringify({ item_id: item_id }),
             contentType: 'application/json',
             dataType: 'json',
@@ -173,7 +175,10 @@ function deleteItem(item_id) {
                 // Handle success response
                 console.log(response.message);
                 alert(response.message);
-                window.location.reload(); // Reload the page after deletion
+                // Reload the page after the alert is dismissed
+                $(document).one('click', '.alert', function () {
+                    window.location.reload(); // Reload the page after alert
+                });
             },
             error: function (xhr, status, error) {
                 // Handle error
@@ -186,7 +191,7 @@ function deleteItem(item_id) {
 
 function validatePositiveInteger(input) {
     const value = parseInt(input.value, 10);
-    
+
     if (isNaN(value) || value < 1) {
         input.value = '';
     } else {
@@ -204,11 +209,11 @@ const itemPrice = document.getElementById('ItemPrice');
 const editItemPrice = document.getElementById('editItemPrice');
 
 [itemPrice, editItemPrice].forEach(input => {
-    input.addEventListener('input', function(e) {
+    input.addEventListener('input', function (e) {
         validatePositiveInteger(e.target);
     });
 
-    input.addEventListener('keydown', function(e) {
+    input.addEventListener('keydown', function (e) {
         preventInvalidKeys(e);
     });
 });

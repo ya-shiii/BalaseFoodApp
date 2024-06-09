@@ -3,7 +3,7 @@ $(document).ready(function () {
     function fetchFullName() {
         $.ajax({
             type: 'GET',
-            url: 'php/fetch_session.php', // You need to create this file to fetch full name from session
+            url: 'php/fetch_session', // You need to create this file to fetch full name from session
             dataType: 'json',
             success: function (data) {
                 if (data.success && data.role === 'in-charge') {
@@ -48,7 +48,7 @@ $(document).ready(function () {
     function fetchAndPopulateCards() {
         $.ajax({
             type: 'GET',
-            url: 'php/fetch_orders.php',
+            url: 'php/fetch_orders',
             dataType: 'json',
             success: function (data) {
                 console.log(data); // Debugging
@@ -143,7 +143,7 @@ $(document).ready(function () {
         // Perform AJAX request to update the status
         $.ajax({
             type: 'POST',
-            url: 'php/update_order_status.php', // You need to create this file to handle status updates
+            url: 'php/update_order_status', // You need to create this file to handle status updates
             data: { customerId: customerId, orderTime: orderTime, newStatus: newStatus },
             dataType: 'json',
             success: function (data) {
@@ -177,7 +177,7 @@ $(document).ready(function () {
     $('#logout-link').click(function (event) {
         event.preventDefault();
         alert('Logged out successfully.')
-        window.location.href = 'php/logout.php';
+        window.location.href = 'php/logout';
     });
 });
 

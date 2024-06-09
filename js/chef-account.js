@@ -3,7 +3,7 @@ $(document).ready(function () {
     function fetchFullName() {
         $.ajax({
             type: 'GET',
-            url: 'php/fetch_session.php', // You need to create this file to fetch full name from session
+            url: 'php/fetch_session', // You need to create this file to fetch full name from session
             dataType: 'json',
             success: function (data) {
                 if (data.success && data.role === 'in-charge') {
@@ -27,7 +27,7 @@ $(document).ready(function () {
     function fetchAccountDetails() {
         $.ajax({
             type: 'GET',
-            url: 'php/fetch_chef_details.php',
+            url: 'php/fetch_chef_details',
             dataType: 'json',
             success: function (data) {
                 if (data.success) {
@@ -52,11 +52,36 @@ $(document).ready(function () {
     // Fetch and populate account details on page load
     fetchAccountDetails();
 
+    $('#account-form').on('submit', function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        const formData = $(this).serializeArray();
+        const data = {};
+
+        formData.forEach(item => {
+            data[item.name] = item.value;
+        });
+
+        $.ajax({
+            url: 'php/update_chef_details', // URL of your PHP file
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: function(response) {
+                alert('Account details updated successfully.');
+                window.location.href = document.referrer;
+            },
+            error: function(xhr, status, error) {
+                alert('Error: ' + xhr.responseText);
+            }
+        });
+    });
+
     // Logout functionality
     $('#logout-link').click(function (event) {
         event.preventDefault();
         alert('Logged out successfully.')
-        window.location.href = 'php/logout.php';
+        window.location.href = 'php/logout';
     });
 });
 

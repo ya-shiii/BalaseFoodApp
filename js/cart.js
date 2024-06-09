@@ -3,7 +3,7 @@ $(document).ready(function () {
     function fetchFullName() {
         $.ajax({
             type: 'GET',
-            url: 'php/fetch_session.php', // You need to create this file to fetch full name from session
+            url: 'php/fetch_session', // You need to create this file to fetch full name from session
             dataType: 'json',
             success: function (data) {
                 if (data.success && data.role === 'customer') {
@@ -28,7 +28,7 @@ $(document).ready(function () {
     function fetchAndPopulateCards() {
         $.ajax({
             type: 'GET',
-            url: 'php/fetch_cart.php',
+            url: 'php/fetch_cart',
             dataType: 'json',
             success: function (data) {
                 console.log(data); // Add this line to debug the response
@@ -72,7 +72,7 @@ $(document).ready(function () {
     // Function to fetch the total amount from the server
     function fetchTotalAmount() {
         $.ajax({
-            url: 'php/fetch_total.php', // PHP file to fetch the total amount
+            url: 'php/fetch_total', // PHP file to fetch the total amount
             type: 'GET',
             dataType: 'json',
             success: function(data) {
@@ -98,7 +98,7 @@ $(document).ready(function () {
         event.preventDefault(); // Prevent the default behavior
 
         $.ajax({
-            url: 'php/check-out-cart.php', // URL of the PHP file
+            url: 'php/check-out-cart', // URL of the PHP file
             type: 'PUT',
             contentType: 'application/json',
             success: function(response) {
@@ -115,14 +115,14 @@ $(document).ready(function () {
     $('#logout-link').click(function (event) {
         event.preventDefault();
         alert('Logged out successfully.')
-        window.location.href = 'php/logout.php';
+        window.location.href = 'php/logout';
     });
 });
 
 function editOrder(order_id) {
     // Fetch the item details using the item ID
     $.ajax({
-        url: 'php/fetch_order_info.php', // Replace with your PHP file to fetch item details
+        url: 'php/fetch_order_info', // Replace with your PHP file to fetch item details
         type: 'POST',
         data: { order_id: order_id },
         dataType: 'json',
@@ -151,7 +151,7 @@ function editOrder(order_id) {
 function deleteOrder(order_id) {
     if (confirm("Are you sure you want to delete this order?")) {
         $.ajax({
-            url: 'php/delete_order.php', // Replace with your PHP file for deleting orders
+            url: 'php/delete_order', // Replace with your PHP file for deleting orders
             type: 'DELETE',
             contentType: 'application/json',
             data: JSON.stringify({ order_id: order_id }),

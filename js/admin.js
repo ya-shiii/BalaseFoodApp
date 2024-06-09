@@ -3,7 +3,7 @@ $(document).ready(function () {
     function fetchFullName() {
         $.ajax({
             type: 'GET',
-            url: 'php/fetch_session.php', // You need to create this file to fetch full name from session
+            url: 'php/fetch_session', // You need to create this file to fetch full name from session
             dataType: 'json',
             success: function (data) {
                 if (data.success && data.role === 'admin') {
@@ -27,12 +27,12 @@ $(document).ready(function () {
     $('#logout-link').click(function (event) {
         event.preventDefault();
         alert('Logged out successfully.')
-        window.location.href = 'php/logout.php';
+        window.location.href = 'php/logout';
     });
 
     function fetchStatistics() {
         $.ajax({
-            url: 'php/fetch_statistics.php', // Replace with the actual URL of your PHP file
+            url: 'php/fetch_statistics', // Replace with the actual URL of your PHP file
             type: 'GET',
             dataType: 'json',
             success: function (data) {

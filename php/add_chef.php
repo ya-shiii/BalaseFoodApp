@@ -7,9 +7,19 @@ session_start();
 
 // Check if form is submitted via PUT method
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
-    // Get the raw input data
-    $data = json_decode(file_get_contents('php://input'), true);
+    // Get the raw input data as JSON
+    $json_data = file_get_contents('php://input');
 
+    // Decode JSON data to associative array
+    $data = json_decode($json_data, true);
+
+    // Check if decoding was successful
+    if ($data === null) {
+        // Failed to decode JSON data
+        echo json_encode(['success' => false, 'message' => 'Invalid JSON data.']);
+        exit();
+    }
+    
     // Sanitize inputs to prevent SQL injection
     $full_name = $conn->real_escape_string($data['full_name']);
     $u_name = $conn->real_escape_string($data['u_name']);

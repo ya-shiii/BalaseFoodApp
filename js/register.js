@@ -10,7 +10,7 @@ $(document).ready(function() {
         });
 
         $.ajax({
-            url: 'php/register.php', // URL of your PHP file
+            url: 'php/register', // URL of your PHP file
             type: 'PUT',
             contentType: 'application/json',
             data: JSON.stringify(data),

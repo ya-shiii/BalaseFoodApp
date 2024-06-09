@@ -10,14 +10,14 @@ $(document).ready(function () {
     $('#logout-link').click(function (event) {
         event.preventDefault();
         alert('Logged out successfully.')
-        window.location.href = 'php/logout.php';
+        window.location.href = 'php/logout';
     });
 });
 // Function to fetch full name from session and display it
 function fetchFullName() {
     $.ajax({
         type: 'GET',
-        url: 'php/fetch_session.php', // You need to create this file to fetch full name from session
+        url: 'php/fetch_session', // You need to create this file to fetch full name from session
         dataType: 'json',
         success: function (data) {
             if (data.success && data.role === 'customer') {
@@ -38,7 +38,7 @@ function fetchFullName() {
 function fetchAndPopulateCards() {
     $.ajax({
         type: 'GET',
-        url: 'php/fetch_menu.php',
+        url: 'php/fetch_menu',
         dataType: 'json',
         success: function (data) {
             console.log(data); // Add this line to debug the response
@@ -49,7 +49,7 @@ function fetchAndPopulateCards() {
                             <a href="#" class="card h-100 bg-dark text-white w-auto" onclick="orderItem(${item.item_id})">
                                 <div class="card-body">
                                     <div class="mb-4 col-12" style="height: 200px; overflow:hidden">
-                                        <img src="img/menu/${item.filename}?t=${new Date().getTime()}" alt="${item.name}" class="img-fluid w-full mb-3">
+                                        <img src="${item.img_path}?t=${new Date().getTime()}" alt="${item.name}" class="img-fluid w-full mb-3">
                                     </div>
                                     <h5 class="card-text text-bold">${item.name}</h5>
                                     <p class="card-text">${item.description}</p>
@@ -74,7 +74,7 @@ function fetchAndPopulateCards() {
 function orderItem(itemId) {
     // Fetch the item details using the item ID
     $.ajax({
-        url: 'php/fetch_item_info.php', // Replace with your PHP file to fetch item details
+        url: 'php/fetch_item_info', // Replace with your PHP file to fetch item details
         type: 'POST',
         data: { item_id: itemId },
         dataType: 'json',

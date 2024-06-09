@@ -9,7 +9,7 @@ $(document).ready(function () {
         });
 
         $.ajax({
-            url: 'php/order_item.php',
+            url: 'php/order_item',
             type: 'PUT',
             contentType: 'application/json',
             data: JSON.stringify(data),

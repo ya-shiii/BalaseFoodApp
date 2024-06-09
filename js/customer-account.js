@@ -3,7 +3,7 @@ $(document).ready(function () {
     function fetchFullName() {
         $.ajax({
             type: 'GET',
-            url: 'php/fetch_session.php', // You need to create this file to fetch full name from session
+            url: 'php/fetch_session', // You need to create this file to fetch full name from session
             dataType: 'json',
             success: function (data) {
                 if (data.success && data.role === 'customer') {
@@ -27,7 +27,7 @@ $(document).ready(function () {
     function fetchAccountDetails() {
         $.ajax({
             type: 'GET',
-            url: 'php/fetch_customer_details.php',
+            url: 'php/fetch_customer_details',
             dataType: 'json',
             success: function (data) {
                 if (data.success) {
@@ -64,7 +64,7 @@ $(document).ready(function () {
         });
 
         $.ajax({
-            url: 'php/update_customer_details.php', // URL of your PHP file
+            url: 'php/update_customer_details', // URL of your PHP file
             type: 'PUT',
             contentType: 'application/json',
             data: JSON.stringify(data),
@@ -83,7 +83,7 @@ $(document).ready(function () {
     $('#logout-link').click(function (event) {
         event.preventDefault();
         alert('Logged out successfully.')
-        window.location.href = 'php/logout.php';
+        window.location.href = 'php/logout';
     });
 });
 

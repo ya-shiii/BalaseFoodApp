@@ -3,7 +3,7 @@ $(document).ready(function () {
     function fetchFullName() {
         $.ajax({
             type: 'GET',
-            url: 'php/fetch_session.php', // You need to create this file to fetch full name from session
+            url: 'php/fetch_session', // You need to create this file to fetch full name from session
             dataType: 'json',
             success: function (data) {
                 if (data.success && data.role === 'admin') {
@@ -27,7 +27,7 @@ $(document).ready(function () {
     function fetchAndPopulateCards() {
         $.ajax({
             type: 'GET',
-            url: 'php/fetch_customers.php',
+            url: 'php/fetch_customers',
             dataType: 'json',
             success: function (data) {
                 // Loop through each user and populate cards
@@ -67,7 +67,7 @@ function changeType(u_id) {
     if (confirm("Are you sure you want to change user type?")) {
         $.ajax({
             type: 'POST',
-            url: 'php/change_customertype.php', // Replace with your backend endpoint
+            url: 'php/change_customertype', // Replace with your backend endpoint
             data: { u_id: u_id },
             dataType: 'json',
             success: function (response) {
@@ -90,7 +90,7 @@ function deactivateUser(user_id) {
     console.log(`Deactivating user with ID: ${user_id}`);
     $.ajax({
         type: 'DELETE',
-        url: 'php/deactivate_user.php', // Assuming this is the endpoint to handle deactivation
+        url: 'php/deactivate_user', // Assuming this is the endpoint to handle deactivation
         data: JSON.stringify({ user_id: user_id }), // Send data as JSON string
         contentType: 'application/json', // Set content type to JSON
         dataType: 'json',

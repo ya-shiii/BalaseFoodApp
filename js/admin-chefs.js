@@ -3,7 +3,7 @@ $(document).ready(function () {
     function fetchFullName() {
         $.ajax({
             type: 'GET',
-            url: 'php/fetch_session.php', // You need to create this file to fetch full name from session
+            url: 'php/fetch_session', // You need to create this file to fetch full name from session
             dataType: 'json',
             success: function (data) {
                 if (data.success && data.role === 'admin') {
@@ -27,7 +27,7 @@ $(document).ready(function () {
     function fetchAndPopulateCards() {
         $.ajax({
             type: 'GET',
-            url: 'php/fetch_chef.php',
+            url: 'php/fetch_chef',
             dataType: 'json',
             success: function (data) {
                 console.log(data); // Add this line to debug the response
@@ -63,8 +63,8 @@ $(document).ready(function () {
 
     // Call function to fetch and populate cards for users
     fetchAndPopulateCards();
-    
-    $('#account-form').submit(function(event) {
+
+    $('#account-form').submit(function (event) {
         event.preventDefault(); // Prevent the default form submission
 
         const formData = {
@@ -79,27 +79,30 @@ $(document).ready(function () {
         };
 
         $.ajax({
-            url: 'php/update_chef_details.php',
+            url: 'php/update_chef_details',
             type: 'PUT',
             contentType: 'application/json',
             data: JSON.stringify(formData),
-            success: function(response) {
+            success: function (response) {
                 alert(response.message);
-                window.location.reload(); // Go back to the referring page
+                // Reload the page after the alert is dismissed
+                $(document).one('click', '.alert', function () {
+                    window.location.reload(); // Reload the page after alert
+                });
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 alert('An error occurred: ' + xhr.responseText);
             }
         });
     });
-    
-    
+
+
 });
 
 function fetchChefInfo(u_id) {
     $.ajax({
         type: 'POST',
-        url: 'php/fetch_chef_info.php',
+        url: 'php/fetch_chef_info',
         data: { u_id: u_id },
         dataType: 'json',
         success: function (response) {
@@ -130,14 +133,17 @@ function changeType(u_id) {
     if (confirm("Are you sure you want to change user type?")) {
         $.ajax({
             type: 'POST',
-            url: 'php/change_cheftype.php', // Replace with your backend endpoint
+            url: 'php/change_cheftype', // Replace with your backend endpoint
             data: { u_id: u_id },
             dataType: 'json',
             success: function (response) {
                 // Handle success response
                 console.log(response.message);
                 alert(response.message);
-                window.location.reload(); // Reload the page after deletion
+                // Reload the page after the alert is dismissed
+                $(document).one('click', '.alert', function () {
+                    window.location.reload(); // Reload the page after alert
+                });
             },
             error: function (xhr, status, error) {
                 // Handle error
@@ -151,14 +157,15 @@ function dismissChef(u_id) {
     if (confirm("Are you sure you want to remove this chef?")) {
         $.ajax({
             type: 'DELETE',
-            url: 'php/delete_chef.php',
+            url: 'php/delete_chef',
             data: JSON.stringify({ u_id: u_id }),
             contentType: 'application/json',
             dataType: 'json',
             success: function (response) {
                 alert(response.message);
-                window.location.reload(); // Reload the page after deletion
-                
+                // Reload the page after the alert is dismissed
+
+                window.location.reload(); // Reload the page after alert
             },
             error: function (xhr, status, error) {
                 alert('An error occurred: ' + xhr.responseText);
@@ -167,7 +174,7 @@ function dismissChef(u_id) {
     }
 }
 
-document.getElementById('editChefBtn').addEventListener('click', function() {
+document.getElementById('editChefBtn').addEventListener('click', function () {
     // Get form data
     const formData = new FormData(document.getElementById('editChefForm'));
 
@@ -182,21 +189,65 @@ document.getElementById('editChefBtn').addEventListener('click', function() {
 
     // Send PUT request using AJAX
     $.ajax({
-        url: 'php/edit_chef.php',
+        url: 'php/edit_chef',
         type: 'PUT',
         data: JSON.stringify(data),
         contentType: 'application/json',
-        success: function(response) {
-            // Handle response
+        success: function (response) {
             console.log(response);
-            alert(response.message);
-            window.location.reload(); // Reload the page after submission
+            if (response && response.message) {
+                alert(response.message);
+            } else {
+                alert('Unexpected response from server');
+            }
+            // Reload the page after the alert is dismissed
+            $(document).one('click', '.alert', function () {
+                window.location.reload(); // Reload the page after alert
+            });
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             // Handle error
             console.error(xhr.responseText);
         }
     });
 });
+
+$(document).ready(function () {
+    $('#addChefForm').submit(function (event) {
+        event.preventDefault(); // Prevent default form submission
+
+        // Get form data
+        var formData = {
+            full_name: $('#ChefName').val(),
+            u_name: $('#ChefUsername').val(),
+            password: $('#ChefPassword').val(),
+            email: $('#ChefEmail').val(),
+            phone: $('#ChefPhone').val(),
+            address: $('#ChefAddress').val()
+        };
+
+        // Send PUT request using AJAX
+        $.ajax({
+            url: 'php/add_chef',
+            type: 'PUT',
+            data: JSON.stringify(formData),
+            contentType: 'application/json',
+            success: function (response) {
+                // Handle success response
+                console.log(response);
+                var message = response.message || 'New chef added successfully.'; // Default message if 'message' key is not present
+                alert(message);
+                window.location.reload(); // Reload the page after submission
+            },
+
+            error: function (xhr, status, error) {
+                // Handle error
+                console.error(xhr.responseText);
+            }
+        });
+    });
+});
+
+
 
 

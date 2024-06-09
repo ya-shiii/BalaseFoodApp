@@ -1,0 +1,11 @@
+# Enable the rewrite engine
+RewriteEngine On
+
+# If the requested filename does not exist as a file
+RewriteCond %{REQUEST_FILENAME} !-f
+
+# If the requested filename does not exist as a directory
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Rewrite the URL to point to the corresponding .php file
+RewriteRule ^([^\.]+)$ $1.php [L,QSA]

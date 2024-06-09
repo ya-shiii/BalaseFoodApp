@@ -8,7 +8,7 @@ $(document).ready(function() {
 function searchAndDisplayResults(searchValue) {
     $.ajax({
         type: 'GET',
-        url: 'php/search_menu.php',
+        url: 'php/search_menu',
         data: { query: searchValue },
         dataType: 'json',
         success: function (data) {

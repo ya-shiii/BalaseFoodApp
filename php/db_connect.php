@@ -3,7 +3,7 @@
 // Database credentials
 $servername = "localhost";
 $username = "root"; //
-$password = ""; //
+$password = ""; //3JvSRq?N;
 $dbname = "balasefoodapp"; //
 
 // Create connection

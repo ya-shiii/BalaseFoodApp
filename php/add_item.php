@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $extension = pathinfo($_FILES['item_image']['name'], PATHINFO_EXTENSION);
         $filename = str_replace(' ', '_', $itemName) . '.' . $extension;
         $fileTmpPath = $_FILES['item_image']['tmp_name'];
-        $destination = '../img/menu/' . $filename;
+        $destination = 'img/menu/' . $filename;
 
         if (!move_uploaded_file($fileTmpPath, $destination)) {
             $response = array(
@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Insert into database
-    $insert_query = "INSERT INTO menu_list (name, description, price, category) VALUES ('$itemName', '$description', '$price', '$category')";
+    $insert_query = "INSERT INTO menu_list (name, description, price, category, img_path) VALUES ('$itemName', '$description', '$price', '$category'. '$destination')";
     if ($conn->query($insert_query) === TRUE) {
         $response = array(
             'success' => true,
@@ -61,7 +61,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         );
         header('Content-Type: application/json');
         echo json_encode($response);
-        exit();
     } else {
         $response = array(
             'success' => false,
@@ -69,7 +68,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         );
         header('Content-Type: application/json');
         echo json_encode($response);
-        exit();
     }
 
     $conn->close();

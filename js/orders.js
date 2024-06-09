@@ -3,7 +3,7 @@ $(document).ready(function () {
     function fetchFullName() {
         $.ajax({
             type: 'GET',
-            url: 'php/fetch_session.php', // You need to create this file to fetch full name from session
+            url: 'php/fetch_session', // You need to create this file to fetch full name from session
             dataType: 'json',
             success: function (data) {
                 if (data.success && data.role === 'customer') {
@@ -47,7 +47,7 @@ function getStatusBadgeClass(status) {
 function fetchAndPopulateCards() {
     $.ajax({
         type: 'GET',
-        url: 'php/fetch_order-list.php',
+        url: 'php/fetch_order-list',
         dataType: 'json',
         success: function (data) {
             console.log(data); // Debugging
@@ -97,7 +97,7 @@ fetchAndPopulateCards();
     $('#logout-link').click(function (event) {
         event.preventDefault();
         alert('Logged out successfully.')
-        window.location.href = 'php/logout.php';
+        window.location.href = 'php/logout';
     });
 });
 

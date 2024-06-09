@@ -3,7 +3,7 @@ $(document).ready(function () {
     function fetchFullName() {
         $.ajax({
             type: 'GET',
-            url: 'php/fetch_session.php', // You need to create this file to fetch full name from session
+            url: 'php/fetch_session', // You need to create this file to fetch full name from session
             dataType: 'json',
             success: function (data) {
                 if (data.success && data.role === 'customer') {
@@ -28,7 +28,7 @@ $(document).ready(function () {
     function fetchAndPopulateCards() {
         $.ajax({
             type: 'GET',
-            url: 'php/fetch_menu-snacks.php',
+            url: 'php/fetch_menu-snacks',
             dataType: 'json',
             success: function (data) {
                 console.log(data); // Add this line to debug the response
@@ -73,14 +73,14 @@ $(document).ready(function () {
     $('#logout-link').click(function (event) {
         event.preventDefault();
         alert('Logged out successfully.')
-        window.location.href = 'php/logout.php';
+        window.location.href = 'php/logout';
     });
 });
 
 function orderItem(itemId) {
     // Fetch the item details using the item ID
     $.ajax({
-        url: 'php/fetch_item_info.php', // Replace with your PHP file to fetch item details
+        url: 'php/fetch_item_info', // Replace with your PHP file to fetch item details
         type: 'POST',
         data: { item_id: itemId },
         dataType: 'json',

@@ -25,6 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $price = $_POST['price'];
     $category = $_POST['category'];
     $filename = '';
+    $imgPath = '';
 
     // Check for duplicate item name
     if (isDuplicateItem($conn, $itemName, $itemId)) {
@@ -53,11 +54,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             header('Content-Type: application/json');
             echo json_encode($response);
             exit();
+        } else {
+            $imgPath = 'img/menu/' . $filename; // Set the relative path to the image
         }
     }
 
     // Update the database
-    $update_query = "UPDATE menu_list SET name='$itemName', description='$description', price='$price', category='$category' WHERE item_id=$itemId";
+    $update_query = "UPDATE menu_list SET name='$itemName', description='$description', price='$price', category='$category'";
+
+    // Include img_path in the update query if a new image was uploaded
+    if (!empty($imgPath)) {
+        $update_query .= ", img_path='$imgPath'";
+    }
+
+    $update_query .= " WHERE item_id=$itemId";
 
     if ($conn->query($update_query) === TRUE) {
         $response = array(
