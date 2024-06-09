@@ -22,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $price = $conn->real_escape_string($_POST['price']);
     $category = $conn->real_escape_string($_POST['category']);
     $filename = '';
+    $imgPath = '';
 
     // Check for duplicate item name
     if (isDuplicateItem($conn, $itemName)) {
@@ -39,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $extension = pathinfo($_FILES['item_image']['name'], PATHINFO_EXTENSION);
         $filename = str_replace(' ', '_', $itemName) . '.' . $extension;
         $fileTmpPath = $_FILES['item_image']['tmp_name'];
-        $destination = 'img/menu/' . $filename;
+        $destination = '../img/menu/' . $filename;
 
         if (!move_uploaded_file($fileTmpPath, $destination)) {
             $response = array(
@@ -49,11 +50,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             header('Content-Type: application/json');
             echo json_encode($response);
             exit();
+        } else {
+            $imgPath = 'img/menu/' . $filename; // Set the relative path to the image
         }
     }
 
     // Insert into database
-    $insert_query = "INSERT INTO menu_list (name, description, price, category, img_path) VALUES ('$itemName', '$description', '$price', '$category'. '$destination')";
+    $insert_query = "INSERT INTO menu_list (name, description, price, category, img_path) VALUES ('$itemName', '$description', '$price', '$category', '$imgPath')";
     if ($conn->query($insert_query) === TRUE) {
         $response = array(
             'success' => true,
