@@ -12,11 +12,15 @@ if (!isset($_SESSION['user_id'])) {
 // Initialize an array to store orders
 $orders = array();
 
-// Fetch orders from the database
-$query = "SELECT order_id, customer_id, ordered, status, GROUP_CONCAT(item_name SEPARATOR ', ') AS item_names, SUM(total) AS total FROM order_list WHERE customer_id = '{$_SESSION['user_id']}'";
+// Safely fetch the logged-in user id
+$user_id = mysqli_real_escape_string($conn, $_SESSION['user_id']);
 
-// Group the rows based on the conditions
-$query .= " GROUP BY ordered ORDER BY ordered DESC";
+
+// Fetch orders from the database
+$query = "SELECT ol.order_id, ol.customer_id, ol.ordered, ol.status, ol.customer_name, GROUP_CONCAT(CONCAT('<b>', ol.amount, 'x</b> ', ol.item_name) SEPARATOR ', ') AS item_names, SUM(ol.total) AS total FROM order_list ol WHERE customer_id = '$user_id' AND status != 'Cart'";
+
+// Group the rows based on customer_id, ordered, and status
+$query .= " GROUP BY ol.customer_id, ol.ordered, ol.status ORDER BY FIELD(status, 'Pending', 'Preparing', 'Serving', 'Completed') ASC";
 
 $result = $conn->query($query);
 
@@ -28,7 +32,8 @@ if ($result->num_rows > 0) {
         $customer_id = $row['customer_id'];
         $ordered_time = $row['ordered'];
         $status = $row['status'];
-        $item_names = explode(', ', $row['item_names']); // Convert to array
+        $customer_name = $row['customer_name'];
+        $item_names = explode(', ', $row['item_names']);
         $total = $row['total'];
 
         // Create an order array with details
@@ -37,6 +42,7 @@ if ($result->num_rows > 0) {
             "customer_id" => $customer_id,
             "ordered_time" => $ordered_time,
             "status" => $status,
+            "customer_name" => $customer_name,
             "item_names" => $item_names,
             "total" => $total
         );

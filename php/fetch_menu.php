@@ -26,7 +26,8 @@ if ($result && $result->num_rows > 0) {
             'price' => $row['price'],
             'category' => $row['category'],
             'filename' => $filename,
-            'img_path' => $row['img_path']
+            'img_path' => $row['img_path'],
+            'status' => $row['status']
         );
         $chefs[] = $chef;
     }

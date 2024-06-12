@@ -38,7 +38,7 @@ function fetchFullName() {
 function fetchAndPopulateCards() {
     $.ajax({
         type: 'GET',
-        url: 'php/fetch_menu',
+        url: 'php/fetch_menu_customer',
         dataType: 'json',
         success: function (data) {
             console.log(data); // Add this line to debug the response

@@ -33,7 +33,7 @@ function searchAndDisplayResults(searchValue) {
                             <a href="#" class="card h-100 bg-dark text-white w-auto" onclick="orderItem(${item.item_id})">
                                 <div class="card-body">
                                     <div class="mb-4 col-12" style="height: ${imgSize}; overflow:hidden">
-                                        <img src="img/menu/${item.filename}?t=${new Date().getTime()}" alt="${item.name}" class="img-fluid w-full mb-3">
+                                        <img src="${item.img_path}?t=${new Date().getTime()}" alt="${item.name}" class="img-fluid w-full mb-3">
                                     </div>
                                     <h5 class="card-text text-bold">${item.name}</h5>
                                     <p class="card-text">${item.description}</p>

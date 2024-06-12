@@ -41,8 +41,9 @@ $(document).ready(function () {
                                     <p class="card-text">Email: ${user.email}</p>
                                     <p class="card-text">Phone number: ${user.phone}</p>
                                     <p class="card-text">Total Orders: ${user.num_orders}</p>
+                                    <a href="#" class="btn btn-primary w-auto" onclick="fetchCustomerInfo(${user.user_id})">Edit</a>
                                     <a href="#" class="btn btn-warning w-auto" onclick="changeType(${user.user_id})">Change Type</a>
-                                    <a href="#" class="btn btn-danger w-auto" onclick="deactivateUser(${user.user_id})">Delete Account</a>
+                                    <a href="#" class="btn btn-danger w-auto" onclick="deactivateUser(${user.user_id})">Delete</a>
                                 </div>
                             </div>
                         </div>`;
@@ -62,6 +63,72 @@ $(document).ready(function () {
 
 
 });
+function fetchCustomerInfo(u_id) {
+    $.ajax({
+        type: 'POST',
+        url: 'php/fetch_customer_info',
+        data: { u_id: u_id },
+        dataType: 'json',
+        success: function (response) {
+            // Call editCustomer function with fetched data
+            editCustomer(response);
+        },
+        error: function (xhr, status, error) {
+            console.error(error);
+        }
+    });
+}
+
+function editCustomer(CustomerInfo) {
+    // Populate the edit modal with the fetched data
+    $('#user_id').val(CustomerInfo.user_id);
+    $('#editCustomerName').val(CustomerInfo.full_name);
+    $('#editCustomerUsername').val(CustomerInfo.username);
+    $('#editCustomerPassword').val(CustomerInfo.password);
+    $('#editCustomerEmail').val(CustomerInfo.email);
+    $('#editCustomerPhone').val(CustomerInfo.phone);
+    $('#editCustomerAddress').val(CustomerInfo.address);
+
+    // Show the edit modal
+    $('#editCustomerModal').modal('show');
+}
+
+document.getElementById('editCustomerBtn').addEventListener('click', function () {
+    // Get form data
+    const formData = new FormData(document.getElementById('editCustomerForm'));
+
+    // Get user_id from hidden input field
+    const user_id = formData.get('user_id');
+
+    // Create an object to hold the form data
+    let data = {};
+    formData.forEach((value, key) => {
+        data[key] = value;
+    });
+
+    // Send PUT request using AJAX
+    $.ajax({
+        url: 'php/edit_customer',
+        type: 'PUT',
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        success: function (response) {
+            console.log(response);
+            if (response && response.message) {
+                alert(response.message);
+            } else {
+                alert('Unexpected response from server');
+            }
+            location.reload();
+            
+        },
+        error: function (xhr, status, error) {
+            // Handle error
+            console.error(xhr.responseText);
+        }
+    });
+});
+
 
 function changeType(u_id) {
     if (confirm("Are you sure you want to change user type?")) {

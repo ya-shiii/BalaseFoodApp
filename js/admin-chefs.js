@@ -85,10 +85,7 @@ $(document).ready(function () {
             data: JSON.stringify(formData),
             success: function (response) {
                 alert(response.message);
-                // Reload the page after the alert is dismissed
-                $(document).one('click', '.alert', function () {
-                    window.location.reload(); // Reload the page after alert
-                });
+                window.location.reload(); // Reload the page after alert
             },
             error: function (xhr, status, error) {
                 alert('An error occurred: ' + xhr.responseText);
@@ -141,9 +138,7 @@ function changeType(u_id) {
                 console.log(response.message);
                 alert(response.message);
                 // Reload the page after the alert is dismissed
-                $(document).one('click', '.alert', function () {
                     window.location.reload(); // Reload the page after alert
-                });
             },
             error: function (xhr, status, error) {
                 // Handle error
@@ -200,10 +195,8 @@ document.getElementById('editChefBtn').addEventListener('click', function () {
             } else {
                 alert('Unexpected response from server');
             }
-            // Reload the page after the alert is dismissed
-            $(document).one('click', '.alert', function () {
                 window.location.reload(); // Reload the page after alert
-            });
+            
         },
         error: function (xhr, status, error) {
             // Handle error

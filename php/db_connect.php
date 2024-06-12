@@ -2,9 +2,9 @@
 
 // Database credentials
 $servername = "localhost";
-$username = "root"; //
+$username = "root"; //u663034616_balase
 $password = ""; //3JvSRq?N;
-$dbname = "balasefoodapp"; //
+$dbname = "balasefoodapp"; //u663034616_balasefoodapp
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);

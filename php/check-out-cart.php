@@ -34,9 +34,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
         // Query execution failed
         echo json_encode(array("success" => false, "error" => "Error: " . $conn->error));
     }
-} else {
-    // Invalid request method
-    echo json_encode(array("success" => false, "error" => "Invalid request method"));
 }
 
 // Close the database connection

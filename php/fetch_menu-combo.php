@@ -7,7 +7,7 @@ include 'db_connect.php';
 $chefs = array();
 
 // Query to fetch chefss from in_charge table
-$query = "SELECT * FROM menu_list WHERE category = 'Combo'";
+$query = "SELECT * FROM menu_list WHERE category = 'Combo' AND status = 'Available'";
 $result = $conn->query($query);
 
 // Check if query was successful

@@ -15,14 +15,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
         // Sanitize the input to prevent SQL injection
         $user_id = mysqli_real_escape_string($conn, $data['user_id']);
 
-        // Construct the UPDATE query to deactivate the user
-        $update_query = "UPDATE users SET active = 0 WHERE user_id = '$user_id'";
+        // Construct the DELETE query
+        $delete_query = "DELETE FROM customers WHERE user_id = '$user_id'";
 
         // Execute the query
-        if (mysqli_query($conn, $update_query)) {
+        if (mysqli_query($conn, $delete_query)) {
             // Query executed successfully
             $response['success'] = true;
-            $response['message'] = 'User deactivated successfully.';
+            $response['message'] = 'Customer account removed successfully.';
         } else {
             // Error executing the query
             $response['success'] = false;
@@ -34,6 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
         $response['message'] = 'Invalid request.';
     }
 } else {
+    // Invalid request method
     $response['success'] = false;
     $response['message'] = 'Invalid request method.';
 }

@@ -80,7 +80,7 @@ $(document).ready(function () {
 function orderItem(itemId) {
     // Fetch the item details using the item ID
     $.ajax({
-        url: 'php/fetch_item_info', // Replace with your PHP file to fetch item details
+        url: 'php/fetch_item_info',
         type: 'POST',
         data: { item_id: itemId },
         dataType: 'json',

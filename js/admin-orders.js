@@ -3,7 +3,7 @@ $(document).ready(function () {
     fetchFullName();
 
     fetchAndPopulateCards();
-    
+
     // Event listener for updating order status
     $(document).on('click', '.update-status', function () {
         var customerId = $(this).data('customer-id');
@@ -11,7 +11,7 @@ $(document).ready(function () {
         var newStatus = $(this).data('status');
         updateOrderStatus(customerId, orderTime, newStatus);
     });
-    
+
 
     // Logout functionality
     $('#logout-link').click(function (event) {
@@ -21,142 +21,167 @@ $(document).ready(function () {
     });
 });
 
-    // Function to fetch full name from session and display it
-    function fetchFullName() {
-        $.ajax({
-            type: 'GET',
-            url: 'php/fetch_session', // You need to create this file to fetch full name from session
-            dataType: 'json',
-            success: function (data) {
-                if (data.success && data.role === 'admin') {
-                    $('#fullname-display').text(data.fullname);
-                    console.log(data.fullname);
-                } else {
-                    // Alert unauthorized access and redirect to unauthorized page if session is not set or user is not admin
-                    alert('You need to login first.');
-                    window.location.href = data.success ? 'index.html' : 'index.html';
-                }
-            },
-            error: function (xhr, status, error) {
-                $('#fullname-display').text("Error fetching full name");
+// Function to fetch full name from session and display it
+function fetchFullName() {
+    $.ajax({
+        type: 'GET',
+        url: 'php/fetch_session', // You need to create this file to fetch full name from session
+        dataType: 'json',
+        success: function (data) {
+            if (data.success && data.role === 'admin') {
+                $('#fullname-display').text(data.fullname);
+                console.log(data.fullname);
+            } else {
+                // Alert unauthorized access and redirect to unauthorized page if session is not set or user is not admin
+                alert('You need to login first.');
+                window.location.href = data.success ? 'index.html' : 'index.html';
             }
-        });
-    }
-
-
-    // Function to get status badge class
-    function getStatusBadgeClass(status) {
-        switch (status) {
-            case 'Cart':
-                return 'badge-info';
-            case 'Pending':
-                return 'badge-warning';
-            case 'Preparing':
-                return 'badge-warning';
-            case 'Serving':
-                return 'badge-primary';
-            case 'Completed':
-                return 'badge-success';
-            default:
-                return 'badge-secondary';
+        },
+        error: function (xhr, status, error) {
+            $('#fullname-display').text("Error fetching full name");
         }
-    }
+    });
+}
 
-    function fetchAndPopulateCards() {
-        $.ajax({
-            type: 'GET',
-            url: 'php/fetch_orders',
-            dataType: 'json',
-            success: function (data) {
-                console.log(data); // Debugging: log the data to check its format
-                if (Array.isArray(data)) { // Check if data is an array
-                    data.forEach(function (order) {
-                        var card = `
-                    <div class="col-lg-4 col-md-6 col-sm-10 my-2">
-                        <div class="card h-100">
-                            <div class="card-header bg-dark text-white">
-                                ${order.ordered_time}
-                            </div>
-                            <div class="card-body">
-                                <p>Customer: <span class="text-bold">${order.customer_name}</span></p>
-                                <ul class="list-unstyled">
-                                    ${formatItemsList(order.item_names)}
-                                </ul>
-                                <p>Total Payment: Php ${order.total}</p>
-                                <p>Status: <span class="badge ${getStatusBadgeClass(order.status)}">${order.status}</span></p>
-                                <div class="btn-group">
-                                    ${renderStatusButton(order.status, order.customer_id, order.ordered_time)}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                        $('.row').append(card);
-                    });
-                } else {
-                    console.error("Data is not an array:", data);
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error("Error fetching orders:", error);
-            }
-        });
+
+// Function to get status badge class
+function getStatusBadgeClass(status) {
+    switch (status) {
+        case 'Cart':
+            return 'badge-info';
+        case 'Pending':
+            return 'badge-warning';
+        case 'Preparing':
+            return 'badge-warning';
+        case 'Serving':
+            return 'badge-primary';
+        case 'Completed':
+            return 'badge-success';
+        default:
+            return 'badge-secondary';
     }
+}
+
+$(document).ready(function () {
+    // Fetch and populate cards on page load
+    fetchAndPopulateCards();
+
+    // Event listeners for filter buttons
+    $('.category').click(function (event) {
+        event.preventDefault();
+
+        // Remove 'active' class from all buttons and add to the clicked one
+        $('.btn').removeClass('active');
+        $(this).addClass('active');
+
+        // Get the status to filter by
+        var status = $(this).text();
+
+        // Fetch and filter the cards based on the status
+        fetchAndPopulateCards(status);
+    });
+});
+
+function fetchAndPopulateCards(filterStatus = 'All') {
+    $.ajax({
+        type: 'GET',
+        url: 'php/fetch_orders',
+        dataType: 'json',
+        success: function (data) {
+            console.log(data); // Debugging: log the data to check its format
+            $('.row').empty(); //empty previous fetch
+
+            if (Array.isArray(data)) { // Check if data is an array
+                data.forEach(function (order) {
+                    if (filterStatus === 'All' || order.status === filterStatus) {
+                        var card = `
+                                <div class="col-lg-4 col-md-6 col-sm-10 my-2">
+                                    <div class="card h-100">
+                                        <div class="card-header bg-dark text-white">
+                                            ${order.ordered_time}
+                                        </div>
+                                        <div class="card-body">
+                                            <p>Customer: <span class="text-bold">${order.customer_name}</span></p>
+                                            <ul class="list-unstyled">
+                                                ${formatItemsList(order.item_names)}
+                                            </ul>
+                                            <p>Total Payment: Php ${order.total}</p>
+                                            <p>Status: <span class="badge ${getStatusBadgeClass(order.status)}">${order.status}</span></p>
+                                            <div class="btn-group">
+                                                ${renderStatusButton(order.status, order.customer_id, order.ordered_time)}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        $('.row').append(card);
+                    }
+
+                });
+            } else {
+                console.error("Data is not an array:", data);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Error fetching orders:", error);
+        }
+    });
+}
 
 // Function to render the appropriate status button based on the order status
-    function renderStatusButton(status, customerId, orderTime) {
-        switch (status) {
-            case 'Pending':
-                return `<button type="button" class="btn btn-primary btn-sm update-status" data-status="Preparing" data-customer-id="${customerId}" data-order-time="${orderTime}">Prepare</button>`;
-            case 'Preparing':
-                return `<button type="button" class="btn btn-info btn-sm update-status" data-status="Serving" data-customer-id="${customerId}" data-order-time="${orderTime}">Serve</button>`;
-            case 'Serving':
-                return `<button type="button" class="btn btn-success btn-sm update-status" data-status="Completed" data-customer-id="${customerId}" data-order-time="${orderTime}">Mark Completed</button>`;
-            case 'Completed':
-                return `<button id="deleteOrderButton_${customerId}_${orderTime}" type="button" class="btn btn-danger btn-sm update-status" data-status="Delete" data-customer-id="${customerId}" data-order-time="${orderTime}">Delete</button>
+function renderStatusButton(status, customerId, orderTime) {
+    switch (status) {
+        case 'Pending':
+            return `<button type="button" class="btn btn-primary btn-sm update-status" data-status="Preparing" data-customer-id="${customerId}" data-order-time="${orderTime}">Prepare</button>`;
+        case 'Preparing':
+            return `<button type="button" class="btn btn-info btn-sm update-status" data-status="Serving" data-customer-id="${customerId}" data-order-time="${orderTime}">Serve</button>`;
+        case 'Serving':
+            return `<button type="button" class="btn btn-success btn-sm update-status" data-status="Completed" data-customer-id="${customerId}" data-order-time="${orderTime}">Mark Completed</button>`;
+        case 'Completed':
+            return `<button id="deleteOrderButton_${customerId}_${orderTime}" type="button" class="btn btn-danger btn-sm update-status" data-status="Delete" data-customer-id="${customerId}" data-order-time="${orderTime}">Delete</button>
 `;
-            default:
-                return '';
-        }
+        default:
+            return '';
     }
+}
 
-    // Function to format items list
-    function formatItemsList(items) {
-        // Check if itemNames is already an array
-        if (Array.isArray(items)) {
-            // Initialize an empty string to store the formatted list
-            var itemList = '';
+// Function to format items list
+function formatItemsList(items) {
+    // Check if itemNames is already an array
+    if (Array.isArray(items)) {
+        // Initialize an empty string to store the formatted list
+        var itemList = '';
 
-            // Loop through the items array and create list items
+        // Loop through the items array and create list items
+        items.forEach(function (item) {
+            itemList += `<li>${item}</li>`;
+        });
+
+        // Return the formatted list
+        return itemList;
+    } else {
+        // Assume itemNames is a comma-separated string and split it
+        var items = items.split(', ');
+
+        // Initialize an empty string to store the formatted list
+        var itemList = '';
+
+        // Check if items array is not empty
+        if (items && items.length > 0) {
+            // Loop through the items array
             items.forEach(function (item) {
                 itemList += `<li>${item}</li>`;
             });
-
-            // Return the formatted list
-            return itemList;
         } else {
-            // Assume itemNames is a comma-separated string and split it
-            var items = items.split(', ');
-
-            // Initialize an empty string to store the formatted list
-            var itemList = '';
-
-            // Check if items array is not empty
-            if (items && items.length > 0) {
-                // Loop through the items array
-                items.forEach(function (item) {
-                    itemList += `<li>${item}</li>`;
-                });
-            } else {
-                // Handle case where items array is empty
-                itemList = '<li>No items found</li>';
-            }
-
-            // Return the formatted list
-            return itemList;
+            // Handle case where items array is empty
+            itemList = '<li>No items found</li>';
         }
+
+        // Return the formatted list
+        return itemList;
     }
-    
+}
+
 // Function to update the status of an order
 function updateOrderStatus(customerId, orderTime, newStatus) {
     // Perform AJAX request to update the status
@@ -183,8 +208,8 @@ function updateOrderStatus(customerId, orderTime, newStatus) {
         }
     });
 }
-    
-    // Function to delete customer order
+
+// Function to delete customer order
 function deleteCustomerOrder(customerId, orderTime) {
     if (confirm("Are you sure you want to delete this order?")) {
         $.ajax({
@@ -213,14 +238,14 @@ function addDeleteButtonListener(customerId, orderTime) {
     const buttonId = `deleteOrderButton_${customerId}_${orderTime}`;
     const deleteButton = document.getElementById(buttonId);
     if (deleteButton) {
-        deleteButton.addEventListener('click', function() {
+        deleteButton.addEventListener('click', function () {
             deleteCustomerOrder(customerId, orderTime);
         });
     }
 }
 
 // Call the function to add the event listener after the DOM is fully loaded
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.update-status[data-status="Delete"]').forEach(button => {
         const customerId = button.getAttribute('data-customer-id');
         const orderTime = button.getAttribute('data-order-time');

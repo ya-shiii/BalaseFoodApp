@@ -47,7 +47,7 @@ $(document).ready(function () {
                                     <p class="card-text">Price each: Php ${item.price}</p>
                                     <p class="card-text">Amount Ordered: <span class="text-bold">${item.amount}</span></p>
                                     <p class="font-italic text-success">Total: Php ${item.total}</p>
-                                    <a href="#" class="btn btn-primary w-auto mr-2" onclick="editOrder(${item.order_id})">Edit Amount</a>
+                                    <a href="#" class="btn btn-primary w-auto mr-2" onclick="editOrder(${item.order_id})">Edit Order</a>
                                     <a href="#" class="btn btn-danger w-auto" onclick="deleteOrder(${item.order_id})">Delete</a>
                                 </div>
                             </div>

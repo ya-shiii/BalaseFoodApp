@@ -13,10 +13,10 @@ if (!isset($_SESSION['user_id'])) {
 $orders = array();
 
 // Fetch orders from the database
-$query = "SELECT ol.order_id, ol.customer_id, ol.ordered, ol.status, ol.customer_name, GROUP_CONCAT(ol.item_name SEPARATOR ', ') AS item_names, SUM(ol.total) AS total FROM order_list ol";
+$query = "SELECT ol.order_id, ol.customer_id, ol.ordered, ol.status, ol.customer_name, GROUP_CONCAT(CONCAT('<b>', ol.amount, 'x</b> ', ol.item_name) SEPARATOR ', ') AS item_names, SUM(ol.total) AS total FROM order_list ol";
 
 // Group the rows based on customer_id, ordered, and status
-$query .= " GROUP BY ol.customer_id, ol.ordered, ol.status ORDER BY ol.ordered DESC";
+$query .= " GROUP BY ol.customer_id, ol.ordered, ol.status ORDER BY FIELD(status, 'Cart', 'Pending', 'Preparing', 'Serving', 'Completed') ASC";
 
 $result = $conn->query($query);
 

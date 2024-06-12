@@ -44,36 +44,60 @@ $(document).ready(function () {
         }
     }
 
+    $(document).ready(function () {
+        // Fetch and populate cards on page load
+        fetchAndPopulateCards();
+
+        // Event listeners for filter buttons
+        $('.category').click(function (event) {
+            event.preventDefault();
+
+            // Remove 'active' class from all buttons and add to the clicked one
+            $('.btn').removeClass('active');
+            $(this).addClass('active');
+
+            // Get the status to filter by
+            var status = $(this).text();
+
+            // Fetch and filter the cards based on the status
+            fetchAndPopulateCards(status);
+        });
+    });
+
     // Function to fetch and populate cards for orders
-    function fetchAndPopulateCards() {
+    function fetchAndPopulateCards(filterStatus = 'All') {
         $.ajax({
             type: 'GET',
             url: 'php/fetch_orders',
             dataType: 'json',
             success: function (data) {
                 console.log(data); // Debugging
+                $('.row').empty(); //empty the previous data
                 data.forEach(function (order) {
-                    var card = `
-                    <div class="col-lg-4 col-md-6 col-sm-10 my-2">
-                        <div class="card h-100">
-                            <div class="card-header bg-dark text-white">
-                                ${order.ordered_time}
-                            </div>
-                            <div class="card-body">
-                                <p>Customer: <span class="text-bold">${order.customer_name}</span></p>
-                                <ul class="list-unstyled">
-                                    ${formatItemsList(order.item_names)}
-                                </ul>
-                                <p>Total Payment: Php ${order.total}</p>
-                                <p>Status: <span class="badge ${getStatusBadgeClass(order.status)}">${order.status}</span></p>
-                                <div class="btn-group">
-                                    ${renderStatusButton(order.status, order.customer_id, order.ordered_time)}
+                    if (filterStatus === 'All' || order.status === filterStatus) {
+                        var card = `
+                            <div class="col-lg-4 col-md-6 col-sm-10 my-2">
+                                <div class="card h-100">
+                                    <div class="card-header bg-dark text-white">
+                                        ${order.ordered_time}
+                                    </div>
+                                    <div class="card-body">
+                                        <p>Customer: <span class="text-bold">${order.customer_name}</span></p>
+                                        <ul class="list-unstyled">
+                                            ${formatItemsList(order.item_names)}
+                                        </ul>
+                                        <p>Total Payment: Php ${order.total}</p>
+                                        <p>Status: <span class="badge ${getStatusBadgeClass(order.status)}">${order.status}</span></p>
+                                        <div class="btn-group">
+                                            ${renderStatusButton(order.status, order.customer_id, order.ordered_time)}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                `;
-                    $('.row').append(card);
+                        `;
+                        $('.row').append(card);
+                    }
+
                 });
             },
             error: function (xhr, status, error) {

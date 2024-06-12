@@ -17,9 +17,6 @@ $result = $conn->query($query);
 if ($result && $result->num_rows > 0) {
     // Fetch items and add them to the array
     while ($row = $result->fetch_assoc()) {
-        
-        // Generate the filename string
-        $filename = str_replace(' ', '_', $row['name']) . '.jpg';
 
         $item = array(
             'item_id' => $row['item_id'],
@@ -27,7 +24,7 @@ if ($result && $result->num_rows > 0) {
             'description' => $row['description'],
             'price' => $row['price'],
             'category' => $row['category'],
-            'filename' => $filename
+            'img_path' => $row['img_path']
         );
         $items[] = $item;
     }
