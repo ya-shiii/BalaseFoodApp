@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Balase Food App - Menu</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container bg-image flex-column justify-content-center py-5 mb-5 pb-5">
+        <div class="container text-center">
+            <h1 class="display-4 text-bold">My Orders</h1>
+            <div class="justify-content-center align-items-center mb-3">
+                <a href="menu.html" class="btn btn-info mr-2 mt-2 mt-2">Food Menu</a>
+                <a href="cart.html" class="btn btn-primary mr-2 mt-2">Open Cart</a>
+                <a href="profile.html" class="btn btn-success mr-2 mt-2">Manage Account</a>
+                <a  href="#" id="logout-link" class="btn btn-danger h-full mt-2">Logout</a>
+            </div>
+
+        </div>
+        <div class="container text-center">
+            <div class="justify-content-center align-items-center mb-3">
+                <a href="#" class="btn btn-secondary mr-2 mt-2 category active">All</a>
+                <a href="#" class="btn btn-secondary mr-2 mt-2 category">Pending</a>
+                <a href="#" class="btn btn-secondary mr-2 mt-2 category">Preparing</a>
+                <a href="#" class="btn btn-secondary mr-2 mt-2 category">Serving</a>
+                <a href="#" class="btn btn-secondary h-full mt-2 category">Completed</a>
+            </div>
+        </div>
+        <!-- Card-like div for customer details -->
+        <div class="container">
+            <div class="row mt-5">
+                <!-- customer cards will be populated here -->
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        &copy; Balase Food App
+    </footer>
+
+    <!-- Bootstrap JS and jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script src="js/orders.js"></script>
+    <script src="js/check_customer.js"></script>
+    <script src="js/logout.js"></script>
+</body>
+
+</html>

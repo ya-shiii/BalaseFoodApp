@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Balase Food App - Menu</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container bg-image flex-column justify-content-center py-5 mb-5 pb-5">
+        <div class="container text-center">
+            <h1 class="display-4 text-bold">Food Cart</h1>
+            <div class="justify-content-center align-items-center mb-3">
+                <a href="menu.html" class="btn btn-info mr-2 mt-2">Food Menu</a>
+                <a href="orders-list.html" class="btn btn-primary mr-2 mt-2">My Orders</a>
+                <a href="profile.html" class="btn btn-success mr-2 mt-2">Manage Account</a>
+                <a  href="#" id="logout-link" class="btn btn-danger h-full mr-2 mt-2">Logout</a>
+            </div>
+            <div class="justify-content-center align-items-center mb-3">
+                <span class="display-4 mr-2 mt-2" id="totalToPay">Total to-pay: ₱ 0.00</span>
+            </div>
+            <div class="justify-content-center align-items-center">
+                <button class="btn btn-primary rounded-pill mr-2 mt-2" id="checkOutButton">Check-out</button>
+            </div>
+
+        </div>
+
+        <!-- Card-like div for customer details -->
+        <div class="container">
+            <div class="row mt-5">
+                <!-- customer cards will be populated here -->
+            </div>
+        </div>
+
+        <!-- Modal for editing an order -->
+        <div class="modal fade bg-light" id="editOrderModal" tabindex="-1" role="dialog"
+            aria-labelledby="editOrderModalLabel" aria-hidden="true">
+            <div class="modal-dialog bg-dark text-white" role="document">
+                <div class="modal-content bg-dark text-white">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editOrderModalLabel">Edit Order Quantity</h5>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Form to edit an order -->
+                        <form id="editOrderForm" method="post" action="php/update_order.php">
+                            <!-- Hidden input for order ID -->
+                            <input type="hidden" id="orderId" name="order_id">
+                            <!-- Hidden input for item ID -->
+                            <input type="hidden" id="orderItemId" name="item_id">
+                            <!-- Hidden input for customer ID -->
+                            <input type="hidden" id="customerId" name="customer_id">
+                            <!-- Hidden input for price -->
+                            <input type="hidden" id="orderItemPrice" name="price">
+                            <!-- Hidden input for total -->
+                            <input type="hidden" id="orderItemTotal" name="total">
+
+                            <div class="form-group">
+                                <label for="orderItemName">Item Name</label>
+                                <input type="text" class="form-control" id="orderItemName" name="item_name" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="orderItemAmount">Quantity</label>
+                                <input type="number" class="form-control" id="orderItemAmount" name="amount" required>
+                            </div>
+                            <!-- Buttons Section -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary" id="saveOrderBtn">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        &copy; Balase Food App
+    </footer>
+
+    <!-- Bootstrap JS and jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script src="js/cart.js"></script>
+    <script src="js/check_customer.js"></script>
+    <script src="js/logout.js"></script>
+</body>
+
+</html>

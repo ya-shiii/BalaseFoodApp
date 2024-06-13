@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Balase Food App - Admin</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container bg-image flex-column justify-content-center py-5">
+        <div class="container text-center">
+            <h1 class="display-4 text-bold">Admin Dashboard</h1>
+        </div>
+        <div class="container pb-5">
+            <div class="d-flex justify-content-center py-3">
+                <a href="#" id="logout-link" class="btn btn-danger h-full">Logout</a>
+            </div>
+        </div>
+
+        <!-- Card-like div for statistics -->
+        <div class="container justify-content-center flex-column">
+            <div class="card bg-transparent">
+                <div class="card-body bg-transparent">
+                    <h5 class="card-title text-white">Statistics</h5>
+                    <div class="row">
+                        <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+                            <a href="admin-customers.html">
+                                <div class="card p-4 bg-dark text-white h-100">
+                                    <div class="card-body">
+                                        <h6 class="card-subtitle mb-2 text-light">Registered Customers
+                                            <span id="customer-count" class="card-text"></span>
+                                        </h6>
+
+
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+                            <a href="admin-chefs.html">
+                                <div class="card p-4 bg-dark text-white h-100">
+                                    <div class="card-body">
+                                        <h6 class="card-subtitle mb-2 text-light">Registered Chefs
+                                            <span id="chefs-count" class="card-text"></span>
+                                        </h6>
+
+                                    </div>
+                                </div>
+                            </a>
+
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-12 mb-3"><a href="admin-orders.html">
+                                <div class="card p-4 bg-dark text-white h-100">
+                                    <div class="card-body">
+                                        <h6 class="card-subtitle mb-2 text-light">Orders
+                                            <span id="orders-count" class="card-text"></span>
+                                        </h6>
+
+                                    </div>
+                                </div>
+                            </a>
+
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-12 mb-3"><a href="admin-menu.html">
+                                <div class="card p-4 bg-dark text-white h-100">
+                                    <div class="card-body">
+                                        <h6 class="card-subtitle mb-2 text-light">Menu Items
+                                            <span id="menu-count" class="card-text"></span>
+                                        </h6>
+
+                                    </div>
+                                </div>
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        &copy; Balase Food App
+    </footer>
+
+    <!-- Bootstrap JS and jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script src="js/admin.js"></script>
+    <script src="js/check_admin.js"></script>
+    <script src="js/logout.js"></script>
+</body>
+
+</html>
